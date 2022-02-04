@@ -1,0 +1,27 @@
+{
+  "name": "quantic-methods",
+  "version": "1.1.0",
+  "description": "Quantic Onion's general methods compilation",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/quantic-methods.umd.ts",
+  "module": "./dist/quantic-methods.es.ts",
+  "types": "./dist/quantic-methods.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/quantic-methods.es.jt",
+      "require": "./dist/quantic-methods.umd.ts"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build-publish": "npm run build && npm version patch && npm publish",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.4",
+    "vite": "^2.7.2"
+  }
+}
