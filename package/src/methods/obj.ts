@@ -8,10 +8,29 @@ function setKeyValue(obj: any, key: string, value: any) {
 
 export default {
   methods: {
+    // addEmptyOptionToList (ex global_addOptionNotSelected)
     // objsAreTheSame (ex qoAreSameObj)
-    // objIsEmpty (ex qoIsObjEmpty)
+    // objIsEmpty (ex qoIsObjEmpty || objIsEmpty)
     // copyAvaibleFields (ex copyFieldsToEdit)
 
+    addEmptyOptionToList(optionsList: any[], { prop = 'name', title = 'Todos', noneId = 0 } = {}) {
+      const noneOption = {
+        id: noneId,
+        [prop]: title,
+      };
+      const newList = [...optionsList];
+      newList.unshift(noneOption);
+      return newList;
+    },
+    global_validateParams(validationParams) {
+      validationParams.forEach((ValidationParam) => {
+        if (ValidationParam.condition) {
+          this.rsAlert(ValidationParam.msg);
+          return false;
+        }
+      });
+      return true;
+    },
     copyAvaibleFields(ObjEditable: object, ObjToCopy: object) {
       for (const key in ObjEditable) {
         if (typeof getKeyValue(ObjToCopy, key) !== 'undefined') {
@@ -29,11 +48,11 @@ export default {
       return true;
     },
     qoIsObjEmpty(obj: object = {}) {
-      for (const key in obj) {
-        // eslint-disable-next-line no-prototype-builtins
-        if (obj.hasOwnProperty(key)) return false;
-      }
-      return true;
+      return (
+        obj
+        && Object.keys(obj).length === 0
+        && Object.getPrototypeOf(obj) === Object.prototype
+      );
     },
   }, // methods
 }; // export default

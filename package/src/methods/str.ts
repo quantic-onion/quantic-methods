@@ -2,6 +2,7 @@ const qmStr = {
   // capitalize
   // checkContainsStr (ex qoStrContains)
   // cleanStr (ex qoCleanStr)
+  // getRandomStr (ex getRandomCode)
   // padZeros (ex pad)
   // removeDiacritics
   // removeWhiteSpaces
@@ -21,6 +22,16 @@ const qmStr = {
     str = qmStr.removeDiacritics(str);
     str = str.toLowerCase();
     return str;
+  },
+  getRandomStr(length = 10) {
+    let result = '';
+    // I and l are removed - O and 0 are removed
+    const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   },
   padZeros(num: number, size: number = 2) {
     // 16 -> 016 | 9 -> 009 | 177 -> 177
