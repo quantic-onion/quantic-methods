@@ -3,7 +3,10 @@ const qmStr = {
   // checkContainsStr (ex qoStrContains)
   // cleanStr (ex qoCleanStr)
   // getRandomStr (ex getRandomCode)
+  // hexToRGBA (ex qoHexToRGBA)
   // padZeros (ex pad)
+  // passDecode (ex decodePass)
+  // passEncode (ex encodePass)
   // removeDiacritics
   // removeWhiteSpaces
   // reverseString
@@ -33,9 +36,37 @@ const qmStr = {
     }
     return result;
   },
+  hexToRGBA(hex: string, alpha: number) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    if (alpha) return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    return `rgb(${r}, ${g}, ${b})`;
+  },
   padZeros(num: number, size: number = 2) {
     // 16 -> 016 | 9 -> 009 | 177 -> 177
     return (`000000000${num}`).substr(-size);
+  },
+  passDecode(pass) {
+    if (!pass) return '';
+    const codifierNum = 7;
+    let finalPass = '';
+    pass = pass.split('-');
+    [...pass].forEach(codedChar => {
+      codedChar = +codedChar - codifierNum;
+      finalPass += String.fromCharCode(codedChar);
+    });
+    return finalPass;
+  },
+  passEncode(pass) {
+    // let passChars =
+    if (!pass) return '';
+    const codifierNum = 7;
+    let finalPass = '';
+    [...pass].forEach(char => {
+      finalPass += `${char.charCodeAt() + codifierNum}-`;
+    });
+    return finalPass.slice(0, -1);
   },
   removeDiacritics(str: string) {
     // Elimina los diacríticos de un texto excepto si es una "ñ" (ES6)

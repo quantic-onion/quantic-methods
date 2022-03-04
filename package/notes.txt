@@ -1,0 +1,1 @@
+pass encode number should be passed as arg

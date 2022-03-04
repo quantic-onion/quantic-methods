@@ -1,12 +1,10 @@
 export default {
-  methods: {
-    // reproduceAudio
+  // reproduceAudio
 
-    reproduceAudio(path: string): void {
-      if (path) {
-        const audio = new Audio(path);
-        audio.play();
-      }
-    },
-  }, // methods
+  reproduceAudio(path: string): void {
+    if (path) {
+      const audio = new Audio(path);
+      audio.play();
+    }
+  },
 }; // export default
