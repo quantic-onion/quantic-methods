@@ -1,4 +1,4 @@
-import qmStr from './str';
+import qmStr from '$packageMethods/str';
 
 import {
   compareAsc,
@@ -7,10 +7,10 @@ import {
   addWeeks,
   addMonths,
   addYears,
-  intervalToDuration,
   format as _format
 } from 'date-fns';
-import { es as languajeEs } from 'date-fns/locale';
+import intervalToDuration from 'date-fns/intervalToDuration'
+import { es } from 'date-fns/locale';
 
 // types
 type Languaje = 'es' | 'en';
@@ -86,6 +86,7 @@ const MONTH_NAMES = {
 // end constants
 
 // GLOBAL FUNCTIONS
+// getDate
 function setDate(date: DateParam = undefined) {
   // current date
   if (!date) return new Date();
@@ -118,7 +119,7 @@ function formatDatetime(datetime: DatetimeParam, format: string) {
   return _format(setDatetime(datetime), format);
 }
 function formatDateLang(date: DateParam, format: string, lang: Languaje) {
-  const langParam = lang === 'es' ? languajeEs : undefined;
+  const langParam = lang === 'es' ? es : undefined;
   return _format(setDate(date), format, { locale: langParam });
 }
 function formatDateCapitalized(date: DateParam, format: string) {
