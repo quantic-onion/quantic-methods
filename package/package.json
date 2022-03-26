@@ -7,7 +7,7 @@
   ],
   "main": "./dist/quantic-methods.umd.ts",
   "module": "./dist/quantic-methods.es.ts",
-  "types": "./dist/quantic-methods.d.ts",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
       "import": "./dist/quantic-methods.es.ts",
