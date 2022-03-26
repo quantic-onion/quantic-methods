@@ -14,20 +14,21 @@ export default {
   },
   setPrice(num: number, { precision = 2 } = {}) {
     if (!num) return 0;
-    return +parseFloat(num).toFixed(precision);
+    return +parseFloat(`${num}`).toFixed(precision);
   },
-  presentNum(num, forceDecimal = false) {
+  presentNum(num: number, forceDecimal = false) {
     // validate
     num = +num;
     let finalInt = '0';
     let decimal = '00';
     const isNegative = num < 0;
     const isValidNum = !(!num || !+num);
+    let numString = '';
     if (isValidNum) {
       // add dots
-      num = parseFloat(Math.abs(num)).toFixed(2);
-      decimal = num.substring(num.length - 2, num.length);
-      const int = num.substring(0, num.length - 3);
+      numString = parseFloat(`${Math.abs(num)}`).toFixed(2);
+      decimal = numString.substring(numString.length - 2, numString.length);
+      const int = numString.substring(0, numString.length - 3);
       const reversedInt = qmStr.reverseString(int);
       let reversedRealInt = '';
       for (let i = 0; i < reversedInt.length; i++) {
@@ -49,7 +50,7 @@ export default {
     let newStr = '';
     str = str.toString();
     for (let i = 0; i < str.length; i++) {
-      if (str[i] == parseInt(str[i], 10)) {
+      if (+str[i] === parseInt(str[i], 10)) {
         newStr += str[i];
       } else if ((isFloat && str[i] == ',') || (isFloat && str[i] == '.')) {
         newStr += '.';

@@ -6,6 +6,8 @@ import qmNum from './methods/num';
 import qmObj from './methods/obj';
 import qmStr from './methods/str';
 
+import './types/parameters';
+
 const allModules = {
   qmApi,
   qmArray,

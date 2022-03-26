@@ -270,6 +270,11 @@ dom-serializer@^1.0.1:
     domhandler "^4.2.0"
     entities "^2.0.0"
 
+dom-walk@^0.1.0:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.2.tgz#0c548bef048f4d1f2a97249002236060daa3fd84"
+  integrity sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==
+
 domelementtype@^2.0.1, domelementtype@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-2.2.0.tgz#9a0b6c2782ed6a1c7323d42267183df9bd8b1d57"
@@ -441,6 +446,14 @@ get-intrinsic@^1.0.2:
     has "^1.0.3"
     has-symbols "^1.0.1"
 
+global@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/global/-/global-4.4.0.tgz#3e7b105179006a323ed71aafca3e9c57a5cc6406"
+  integrity sha512-wv/LAoHdRE3BeTGz53FAamhGlPLhlssK45usmGFThIi4XqnBmjKQ16u+RNbP7WvigRZDxUsM0J3gcQ5yicaL0w==
+  dependencies:
+    min-document "^2.19.0"
+    process "^0.11.10"
+
 has-symbols@^1.0.1, has-symbols@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/has-symbols/-/has-symbols-1.0.2.tgz#165d3070c00309752a1236a479331e3ac56f1423"
@@ -535,6 +548,13 @@ magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.4"
 
+min-document@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
+  integrity sha1-e9KC4/WELtKVu3SM3Z8f+iyCRoU=
+  dependencies:
+    dom-walk "^0.1.0"
+
 nanoid@^3.1.30:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
@@ -563,6 +583,11 @@ postcss@^8.1.10, postcss@^8.4.5:
     nanoid "^3.1.30"
     picocolors "^1.0.0"
     source-map-js "^1.0.1"
+
+process@^0.11.10:
+  version "0.11.10"
+  resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
+  integrity sha1-czIwDoQBYb2j5podHZGn1LwW8YI=
 
 promise@^7.0.1:
   version "7.3.1"
@@ -674,12 +699,13 @@ pug@^3.0.2:
     pug-runtime "^3.0.1"
     pug-strip-comments "^2.0.0"
 
-quantic-methods@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/quantic-methods/-/quantic-methods-1.4.2.tgz#786d20dc00e453ba74e747754f4f78d4e60ee7dd"
-  integrity sha512-aLQGjqv03LiHZDcI5BOhiSopUeAXU4sAzG6Bmhz4W4oukVc+vSqeM2UC/B97t6tVr6DGb/jIEdAWHZtFnLjR9g==
+quantic-methods@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/quantic-methods/-/quantic-methods-1.5.0.tgz#dc88761e7f4a3755e7e8701586b402075da31339"
+  integrity sha512-DmExlUKvBi2BZ1taFvKUEcun2Vhu/vOXXZrSyRhcpaQfr4tmEnApbTIbBOkqh3Qa8Ym4hSnLOuMDTjKU2UMMng==
   dependencies:
     date-fns "^2.28.0"
+    global "^4.4.0"
 
 request-light@^0.5.4:
   version "0.5.7"

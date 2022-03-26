@@ -1,6 +1,7 @@
 
-const path = require('path')
-const { defineConfig } = require('vite')
+const path = require('path');
+const { defineConfig } = require('vite');
+import typescript from 'rollup-plugin-typescript2';
 
 module.exports = defineConfig({
   build: {
@@ -9,8 +10,9 @@ module.exports = defineConfig({
       name: 'quantic-methods',
       fileName: (format) => `quantic-methods.${format}.ts`
     },
-    rollupOptions: {
-
-    }
+    rollupOptions: {},
+    plugins: [
+      typescript(/*{ plugin options }*/)
+    ],
   }
 })

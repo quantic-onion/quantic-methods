@@ -47,24 +47,23 @@ const qmStr = {
     // 16 -> 016 | 9 -> 009 | 177 -> 177
     return (`000000000${num}`).substr(-size);
   },
-  passDecode(pass) {
+  passDecode(pass: string) {
     if (!pass) return '';
     const codifierNum = 7;
     let finalPass = '';
-    pass = pass.split('-');
-    [...pass].forEach(codedChar => {
-      codedChar = +codedChar - codifierNum;
-      finalPass += String.fromCharCode(codedChar);
+    const passSplited = pass.split('-');
+    [...passSplited].forEach(codedChar => {
+      finalPass += String.fromCharCode(+codedChar - codifierNum);
     });
     return finalPass;
   },
-  passEncode(pass) {
+  passEncode(pass: string) {
     // let passChars =
     if (!pass) return '';
     const codifierNum = 7;
     let finalPass = '';
     [...pass].forEach(char => {
-      finalPass += `${char.charCodeAt() + codifierNum}-`;
+      finalPass += `${char.charCodeAt(0) + codifierNum}-`;
     });
     return finalPass.slice(0, -1);
   },

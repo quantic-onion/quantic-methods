@@ -1,4 +1,11 @@
-export default {
+import qmObj from './obj';
+import { objectWithId } from '../types/parameters';
+
+type SqlOrderType = 'DESC' | 'ASC';
+type SqlKeyPair = [string, SqlOrderType | undefined];
+type SqlKeysPairFull = [string, SqlOrderType]
+
+const qmArray = {
   // arrayToText
   // getRandomElementOfArray
   // removeOfArray (ex qoRemoveOfArray)
@@ -37,43 +44,56 @@ export default {
     if (index === -1) return;
     list.splice(index, 1);
   },
-  removeOfArrayById(list: object[], id: number) {
+  removeOfArrayById(list: objectWithId[], id: number) {
     const index = list.findIndex(i => i.id === id);
     if (index === -1) return;
     list.splice(index, 1);
   },
   replaceInList(arr: object[], NewItem: object, prop: string = 'id') {
     if (!NewItem) return;
-    const index = arr.findIndex(i => i[prop] === NewItem[prop]);
+    const index = arr.findIndex(i => qmObj.getObjKey(i, prop) === qmObj.getObjKey(NewItem, prop));
     if (index !== -1) arr.splice(index, 1, NewItem);
   },
-  sort(arr: object[], keys: [String, any[]]) {
+  sort(arr: object[], keys: string | SqlKeyPair | SqlKeyPair[]) {
     // sort array of objects
     // keys can be: 'key' | [key, 'DESC'] | [[key1, 'ASC'], key2, [key3, 'DESC']
-    if (typeof keys === 'string') keys = [keys];
-    if (keys.length === 2) {
-      if (keys[1] === 'DESC' || keys[1] === 'ASC') {
-        keys = [keys];
+
+    function varIsSqlKeys(varToCheck: SqlKeyPair | SqlKeyPair[]): varToCheck is SqlKeyPair {
+      return typeof varToCheck[0] === 'string' && (varToCheck[1] === 'DESC' || varToCheck[1] === 'ASC');
+    } 
+    function forceOrderType(keyPair: SqlKeyPair) {
+      if (typeof keyPair[1] === 'undefined') keyPair[1] = 'ASC';
+    }
+    // clean the data - anytyhing -> SqlKeyPair[]
+    let keysList: SqlKeyPair[];
+    if (typeof keys === 'string') {
+      keysList = [[keys, 'ASC']];
+    } else {
+      if (varIsSqlKeys(keys)) {
+        keysList = [keys];
+      } else {
+        keysList = keys;
       }
     }
-    const finalKeys = [];
-    keys.forEach(key => {
-      if (typeof key === 'string') key = [key];
-      if (typeof key[1] === 'undefined') key[1] = 'ASC';
-      finalKeys.push(key);
+    const finalKeysList: SqlKeysPairFull[] = [];
+    keysList.forEach(keyPair => {
+      forceOrderType(keyPair);
+      finalKeysList.push()
     });
-    // now keys is somthing like [[key1, 'DESC'], [key2], [key3], [key4, 'DESC'])
+    // now keysList is something like [[key1, 'DESC'], [key2], [key3], [key4, 'DESC'])
     return arr.sort((a, b) => {
       let value = 0;
-      finalKeys.forEach(([key, order]) => {
+      finalKeysList.forEach(([key, order]) => {
         if (!value) {
           const mult = order === 'DESC' ? -1 : +1;
           // or 0, because undefined broke everything
-          if ((a[key] || 0) < (b[key] || 0)) value = -1 * mult;
-          if ((a[key] || 0) > (b[key] || 0)) value = +1 * mult;
+          if ((qmObj.getObjKey(a, key) || 0) < (qmObj.getObjKey(b, key) || 0)) value = -1 * mult;
+          if ((qmObj.getObjKey(a, key) || 0) > (qmObj.getObjKey(b, key) || 0)) value = +1 * mult;
         }
       });
       return value;
     });
   },
 }; // export default
+
+export default qmArray
