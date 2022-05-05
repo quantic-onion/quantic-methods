@@ -1,4 +1,4 @@
-import qmApi from './methods/api';
+import qmApiRest from './methods/api-rest';
 import qmArray from './methods/array';
 import qmAudio from './methods/audio';
 import qmDate from './methods/date';
@@ -9,7 +9,7 @@ import qmStr from './methods/str';
 import './types/parameters';
 
 const allModules = {
-  qmApi,
+  qmApiRest,
   qmArray,
   qmAudio,
   qmDate,
@@ -19,7 +19,7 @@ const allModules = {
 };
 export {
   allModules as default,
-  qmApi,
+  qmApiRest,
   qmArray,
   qmAudio,
   qmDate,

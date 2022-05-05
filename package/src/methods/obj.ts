@@ -8,8 +8,10 @@ function setKeyValue(obj: any, key: string, value: any) {
 
 export default {
   // addEmptyOptionToList (ex global_addOptionNotSelected)
-  // getObjKey
+  // getObjKey -> should be renamed to getValueByKey
+  // getValueByKey
   // objsAreTheSame (ex qoAreSameObj)
+  // renameObjKey
   // objIsEmpty (ex qoIsObjEmpty || objIsEmpty)
   // copyAvaibleFields (ex copyFieldsToEdit)
 
@@ -30,9 +32,14 @@ export default {
     }
   },
   isArray(obj: [object, any[]]) {
+    if (!obj) return false;
+    if (typeof obj !== 'object') return false;
     return obj.constructor === Array;
   },
   getObjKey(obj: any, key: string): any{
+    return obj[key];
+  },
+  getValueByKey(obj: any, key: string): any{
     return obj[key];
   },
   objsAreTheSame(obj1: object, obj2: object) {

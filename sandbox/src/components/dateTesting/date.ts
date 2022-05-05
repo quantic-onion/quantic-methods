@@ -25,6 +25,8 @@ type DateDiference = {
 };
 type Datetime = string
 
+type presentedDate = string; // dd/mm/yyyy
+type DateFormat = 'dd/mm' | 'dd/mm/yy' | 'dd/mm/yyyy';
 type DateParam = Date | DateDiference | undefined
 type DatetimeParam = Datetime | undefined
 // end types
@@ -91,7 +93,7 @@ function setDate(date: DateParam = undefined) {
   // current date
   if (!date) return new Date();
   // passed date
-  if (typeof date === 'string') return new Date(date);
+  if (typeof date === 'string') return new Date(`${date}T00:00:00`);
   // date by diference
   const Diference = date;
   let newDate = new Date();
@@ -246,10 +248,20 @@ export default {
   // PRESENTATION
   // presentDate
   // presentTime
-  presentDate(date: DateParam = undefined) {
-    return formatDate(date, 'dd/MM/yyyy')
+  presentDate(date: DateParam = undefined, format: DateFormat = 'dd/mm/yy'): presentedDate {
+    if (!date) return '';
+    let pluginFormat = 'dd/MM/yy';
+    if (format === 'dd/mm/yyyy') pluginFormat = 'dd/MM/yyyy';
+    if (format === 'dd/mm') pluginFormat = 'dd/MM';
+    return formatDate(date, pluginFormat)
   },
   presentTime(datetime: DatetimeParam = undefined) {
     return formatDatetime(datetime, 'kk:mm');
+  },
+  dateToDb(date: presentedDate) {
+    const day = date.substring(0, 2);
+    const month = date.substring(3, 5);
+    const year = date.substring(6, 10);
+    return `${year}-${month}-${day}`;
   },
 };

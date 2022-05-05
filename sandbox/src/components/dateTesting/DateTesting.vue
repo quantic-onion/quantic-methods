@@ -20,13 +20,16 @@ div
   ShowData(title="Días de diferencia" :value="qmDate.datesDifferenceInDays('2016-06-21', '2016-06-04')")
   ShowData(title="Días de diferencia" :value="qmDate.datesDifferenceInDays('2016-06-04', '2016-06-21')")
   ShowData(title="Current date" :value="qmDate.getDate()")
-  ShowData(title="Tomorrow date" :value="qmDate.getDate('2016-06-04')")
+  ShowData(title="Date 2016-06-04'" :value="qmDate.getDate('2016-06-04')")
   ShowData(title="Tomorrow date" :value="qmDate.getDate({ days: +1 })")
   ShowData(title="3 days ago date" :value="qmDate.getDate({ days: -3 })")
   ShowData(title="Current date presented" :value="qmDate.presentDate()")
+  ShowData(title="Date '2022-05-31'" :value="qmDate.presentDate('2022-05-31')")
+  //- ShowData(title="Date '24-04-2022'" :value="qmDate.presentDate('24-04-2022')")
   ShowData(title="Current time" :value="qmDate.getTime()")
   ShowData(title="Current time presented" :value="qmDate.presentTime()")
   ShowData(title="Current datetime" :value="qmDate.getDatetime()")
+  ShowData(title="Date present to DB" :value="qmDate.dateToDb('17/06/2022')")
 </template>
 
 <script setup lang="ts">

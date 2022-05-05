@@ -51,10 +51,10 @@ const qmArray = {
   },
   replaceInList(arr: object[], NewItem: object, prop: string = 'id') {
     if (!NewItem) return;
-    const index = arr.findIndex(i => qmObj.getObjKey(i, prop) === qmObj.getObjKey(NewItem, prop));
+    const index = arr.findIndex(i => qmObj.getValueByKey(i, prop) === qmObj.getValueByKey(NewItem, prop));
     if (index !== -1) arr.splice(index, 1, NewItem);
   },
-  sort(arr: object[], keys: string | SqlKeyPair | SqlKeyPair[]) {
+  sort<T>(arr: T[], keys: string | SqlKeyPair | SqlKeyPair[]) : T[] {
     // sort array of objects
     // keys can be: 'key' | [key, 'DESC'] | [[key1, 'ASC'], key2, [key3, 'DESC']
 
@@ -87,8 +87,8 @@ const qmArray = {
         if (!value) {
           const mult = order === 'DESC' ? -1 : +1;
           // or 0, because undefined broke everything
-          if ((qmObj.getObjKey(a, key) || 0) < (qmObj.getObjKey(b, key) || 0)) value = -1 * mult;
-          if ((qmObj.getObjKey(a, key) || 0) > (qmObj.getObjKey(b, key) || 0)) value = +1 * mult;
+          if ((qmObj.getValueByKey(a, key) || 0) < (qmObj.getValueByKey(b, key) || 0)) value = -1 * mult;
+          if ((qmObj.getValueByKey(a, key) || 0) > (qmObj.getValueByKey(b, key) || 0)) value = +1 * mult;
         }
       });
       return value;

@@ -16,17 +16,19 @@ import { es as languajeEs } from 'date-fns/locale';
 type Languaje = 'es' | 'en';
 type Time = string | undefined; // hh:mm
 type Date = string; // yyyy-mm-dd
+type presentedDate = string; // dd/mm/yyyy
+type DateFormat = 'dd/mm' | 'dd/mm/yy' | 'dd/mm/yyyy';
 type DateDiference = {
-  seconds: number,
-  days: number,
-  weeks: number,
-  months: number,
-  years: number,
+  seconds?: number,
+  days?: number,
+  weeks?: number,
+  months?: number,
+  years?: number,
 };
 type Datetime = string
 
-type DateParam = Date | DateDiference | undefined
-type DatetimeParam = Datetime | undefined
+type DateParam = Date | DateDiference | undefined | null
+type DatetimeParam = Datetime | undefined | null
 // end types
 
 
@@ -86,11 +88,11 @@ const MONTH_NAMES = {
 // end constants
 
 // GLOBAL FUNCTIONS
-function setDate(date: DateParam = undefined) {
+function setDate(date?: DateParam) {
   // current date
   if (!date) return new Date();
   // passed date
-  if (typeof date === 'string') return new Date(date);
+  if (typeof date === 'string') return new Date(`${date.substring(0, 10)}T00:00:00`);
   // date by diference
   const Diference = date;
   let newDate = new Date();
@@ -180,75 +182,86 @@ export default {
   // getMonthName
   // getTime
   // getYear
-  getDate(date: DateParam = undefined) {
+  getDate(date?: DateParam) {
     return formatDate(date, 'yyyy-MM-dd')
   },
-  getDatetime(datetime: DatetimeParam = undefined) {
+  getDatetime(datetime?: DatetimeParam) {
     return `${this.getDate(datetime)} ${this.getTime(datetime)}`;
   },
-  getDayOfMonth(date: DateParam = undefined) {
+  getDayOfMonth(date?: DateParam) {
     return formatDate(date, 'd');
   },
-  getDayOfWeekNum(date: DateParam = undefined) {
+  getDayOfWeekNum(date?: DateParam) {
     // return number of day. Between 1 and 7
     return formatDate(date, 'i');
   },
-  getDayOfWeekName(date: DateParam = undefined, lang: Languaje = DEFAULT_LANG) {
+  getDayOfWeekName(date?: DateParam, lang: Languaje = DEFAULT_LANG) {
     return formatDateLangCapitalized(date, 'iiii', lang);
   },
-  getDayOfYear(date: DateParam = undefined) {
+  getDayOfYear(date?: DateParam) {
     // return number of day. Between 1 and 366
     return formatDate(date, 'D');
   },
-  getMinutesOfDay(datetime: DatetimeParam = undefined) {
+  getMinutesOfDay(datetime?: DatetimeParam) {
     const h = formatDatetime(datetime, 'kk');
     const min = formatDatetime(datetime, 'mm');
     return (+h * 60) + (+min);
   },
-  getMonthNum(date: DateParam = undefined) {
+  getMonthNum(date?: DateParam) {
     // return number of month. Between 01 and 12
     return formatDate(date, 'MM');
   },
-  getMonthName(date: DateParam = undefined, lang: Languaje = DEFAULT_LANG) {
+  getMonthName(date?: DateParam, lang: Languaje = DEFAULT_LANG) {
     return formatDateLangCapitalized(date, 'MMMM', lang);
   },
-  getTime(datetime: DatetimeParam = undefined, useMiliseconds: boolean = false) {
+  getTime(datetime?: DatetimeParam, useMiliseconds: boolean = false) {
     if (!useMiliseconds) return formatDatetime(datetime, 'kk:mm:ss');
     return formatDatetime(datetime, 'kk:mm:ss:SSSSSS');
   },
-  getYear(date: DateParam = undefined, format: 'yy' | 'yyyy' = 'yyyy') {
+  getYear(date?: DateParam, format: 'yy' | 'yyyy' = 'yyyy') {
     return formatDateCapitalized(date, format);
   },
 
   // COMPARISON
-  dateIsNewer(date1: DateParam = undefined, date2: DateParam = undefined) {
+  dateIsNewer(date1?: DateParam, date2?: DateParam) {
     // compare two dates and return true if date1 is newer than date2
-    if (date1 === undefined && date2 === undefined) return false;
+    if (!date1 && !date2) return false;
     return this.dateIsNewerFunc(date1, date2) === 1;
   },
-  dateIsNewerFunc(date1: DateParam = undefined, date2: DateParam = undefined) {
+  dateIsNewerFunc(date1?: DateParam, date2?: DateParam) {
     // compare two dates and returns:
     // -1 if date1 < date2
     //  0 if date1 = date2
     //  1 if date1 > date2
-    if (date1 === undefined && date2 === undefined) return 0;
+    if (!date1 && !date2) return 0;
     return compareAsc(setDate(date1), setDate(date2));
   },
-  datesDifferenceInDays(date1: DateParam = undefined, date2: DateParam = undefined) {
+  datesDifferenceInDays(date1?: DateParam, date2?: DateParam) {
     // return diference in days
     // (just full days count)
     // (allways positive)
-    if (date1 === undefined && date2 === undefined) return 0;
+    if (!date1 && !date2) return 0;
     return getDatesInterval(date1, date2).days || 0;
   },
 
   // PRESENTATION
   // presentDate
   // presentTime
-  presentDate(date: DateParam = undefined) {
-    return formatDate(date, 'dd/MM/yyyy')
+  presentDate(date?: DateParam, format: DateFormat = 'dd/mm/yy'): presentedDate {
+    if (!date) return '';
+    let pluginFormat = 'dd/MM/yy';
+    if (format === 'dd/mm/yyyy') pluginFormat = 'dd/MM/yyyy';
+    if (format === 'dd/mm') pluginFormat = 'dd/MM';
+    return formatDate(date, pluginFormat)
   },
-  presentTime(datetime: DatetimeParam = undefined) {
+  presentTime(datetime?: DatetimeParam): presentedDate {
+    if (!datetime) return '';
     return formatDatetime(datetime, 'kk:mm');
+  },
+  dateToDb(date: presentedDate) {
+    const day = date.substring(0, 2);
+    const month = date.substring(3, 5);
+    const year = date.substring(6, 10);
+    return `${year}-${month}-${day}`;
   },
 };
