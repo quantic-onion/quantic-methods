@@ -93,7 +93,11 @@ function setDate(date: DateParam = undefined) {
   // current date
   if (!date) return new Date();
   // passed date
-  if (typeof date === 'string') return new Date(`${date}T00:00:00`);
+  if (typeof date === 'string') {
+    // if has not time, set time to 0
+    if (date.length < 16) date = `${date.slice(0, )}T00:00:00`
+    return new Date(date);
+  }
   // date by diference
   const Diference = date;
   let newDate = new Date();
@@ -248,14 +252,15 @@ export default {
   // PRESENTATION
   // presentDate
   // presentTime
-  presentDate(date: DateParam = undefined, format: DateFormat = 'dd/mm/yy'): presentedDate {
+  presentDate(date?: DateParam, format: DateFormat = 'dd/mm/yy'): presentedDate {
     if (!date) return '';
     let pluginFormat = 'dd/MM/yy';
     if (format === 'dd/mm/yyyy') pluginFormat = 'dd/MM/yyyy';
     if (format === 'dd/mm') pluginFormat = 'dd/MM';
     return formatDate(date, pluginFormat)
   },
-  presentTime(datetime: DatetimeParam = undefined) {
+  presentTime(datetime?: DatetimeParam): presentedDate {
+    if (!datetime) return '';
     return formatDatetime(datetime, 'kk:mm');
   },
   dateToDb(date: presentedDate) {

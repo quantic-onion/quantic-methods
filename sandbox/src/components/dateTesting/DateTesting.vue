@@ -30,6 +30,8 @@ div
   ShowData(title="Current time presented" :value="qmDate.presentTime()")
   ShowData(title="Current datetime" :value="qmDate.getDatetime()")
   ShowData(title="Date present to DB" :value="qmDate.dateToDb('17/06/2022')")
+  ShowData(title="From datetime SQL" :value="qmDate.presentDate('2022-05-07T08:52:04.821-03:00')")
+  ShowData(title="Date present to DB" :value="qmDate.presentTime('2022-05-10T11:13:51.832-03:00')")
 </template>
 
 <script setup lang="ts">
