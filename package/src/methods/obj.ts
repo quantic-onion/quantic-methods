@@ -1,12 +1,11 @@
-// for ts
-function getKeyValue(obj: any, key: string) {
-  return obj[key];
-}
-function setKeyValue(obj: any, key: string, value: any) {
-  obj[key] = value;
-}
-
 export default {
+    // for ts
+  getKeyValue(obj: any, key: string) {
+    return obj[key];
+  },
+  setKeyValue(obj: any, key: string, value: any) {
+    obj[key] = value;
+  },
   // addEmptyOptionToList (ex global_addOptionNotSelected)
   // getObjKey -> should be renamed to getValueByKey
   // getValueByKey
@@ -26,8 +25,8 @@ export default {
   },
   copyAvaibleFields(ObjEditable: object, ObjToCopy: object) {
     for (const key in ObjEditable) {
-      if (typeof getKeyValue(ObjToCopy, key) !== 'undefined') {
-        setKeyValue(ObjEditable, key, getKeyValue(ObjToCopy, key));
+      if (typeof this.getKeyValue(ObjToCopy, key) !== 'undefined') {
+        this.setKeyValue(ObjEditable, key, this.getKeyValue(ObjToCopy, key));
       }
     }
   },
@@ -44,10 +43,10 @@ export default {
   },
   objsAreTheSame(obj1: object, obj2: object) {
     for (const key in obj1) {
-      if (getKeyValue(obj1, key) != getKeyValue(obj2, key)) return false;
+      if (this.getKeyValue(obj1, key) != this.getKeyValue(obj2, key)) return false;
     }
     for (const key in obj2) {
-      if (getKeyValue(obj1, key) != getKeyValue(obj2, key)) return false;
+      if (this.getKeyValue(obj1, key) != this.getKeyValue(obj2, key)) return false;
     }
     return true;
   },
