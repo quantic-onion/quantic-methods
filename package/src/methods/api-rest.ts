@@ -56,7 +56,7 @@ function responsePascalToCamelCase(data: any) {
 }
 
 function callAxios(method: DbMethod, url: string, params?: object, headers?: object) {
-  if (method === 'get') return axios.get(url, { params: params }, headers);
+  if (method === 'get') return axios.get(url, { params: params, ...headers });
   if (method === 'put') return axios.put(url, params, headers);
   if (method === 'post') return axios.post(url, params, headers);
   if (method === 'delete') return axios.delete(url);
@@ -111,7 +111,7 @@ export default {
     successCb: (res: any) => void,
     listLenghtCb: (listLenght: number) => void,
 ) {
-    this.connectDatabase(method, serverUrl, url, params, (res) => {
+    this.connectDatabase(method, serverUrl, url, params, {}, (res) => {
       const params2 = {
         ...params,
         justCount: true,
@@ -119,7 +119,7 @@ export default {
         page: undefined,
       };
       successCb(res);
-      this.connectDatabase(method, serverUrl, url, params2, (listLenght: number) => {
+      this.connectDatabase(method, serverUrl, url, params2, {}, (listLenght: number) => {
         listLenghtCb(listLenght);
       });
     })
