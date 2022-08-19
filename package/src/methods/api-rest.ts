@@ -55,10 +55,10 @@ function responsePascalToCamelCase(data: any) {
   return data;
 }
 
-function callAxios(method: DbMethod, url: string, params?: object) {
-  if (method === 'get') return axios.get(url, { params: params});
-  if (method === 'put') return axios.put(url, params);
-  if (method === 'post') return axios.post(url, params);
+function callAxios(method: DbMethod, url: string, params?: object, headers?: object) {
+  if (method === 'get') return axios.get(url, { params: params }, headers);
+  if (method === 'put') return axios.put(url, params, headers);
+  if (method === 'post') return axios.post(url, params, headers);
   if (method === 'delete') return axios.delete(url);
   return axios.get(url, { params: params });
 }
@@ -78,10 +78,11 @@ export default {
     serverUrl: string,
     url: string,
     params?: object,
+    headers?: object,
     success?: (res: any, count?: number) => void,
     error?: (res: any) => void,
   ) {
-    callAxios(method, `${serverUrl}${url}`, params)
+    callAxios(method, `${serverUrl}${url}`, params, headers)
     .then(res => {
       if (!checkStatus(res.status)) {
         console.log('EL STATUS ESTÁ MAL');
