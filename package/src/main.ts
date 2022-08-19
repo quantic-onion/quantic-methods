@@ -6,6 +6,18 @@ import qmNum from './methods/num';
 import qmObj from './methods/obj';
 import qmStr from './methods/str';
 
+import type {
+  DayOfWeekLowerCase,
+  DayOfWeek,
+  DayOfWeekSpanishLowerCase,
+  DayOfWeekSpanish,
+  MonthNameLowerCase,
+  MonthName,
+  MonthNameSpanishLowerCase,
+  MonthNameSpanish,
+} from './methods/date';
+
+
 import './types/parameters';
 
 const allModules = {
@@ -26,6 +38,16 @@ export {
   qmNum,
   qmObj,
   qmStr,
+  // TYPES
+  // date types
+  DayOfWeekLowerCase,
+  DayOfWeek,
+  DayOfWeekSpanishLowerCase,
+  DayOfWeekSpanish,
+  MonthNameLowerCase,
+  MonthName,
+  MonthNameSpanishLowerCase,
+  MonthNameSpanish,
 };
 
 // export module App {

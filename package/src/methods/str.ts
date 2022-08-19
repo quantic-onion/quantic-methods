@@ -26,6 +26,9 @@ const qmStr = {
     str = str.toLowerCase();
     return str;
   },
+  getRandomHexColor() {
+    return Math.floor(Math.random()*16777215).toString(16);
+  },
   getRandomStr(length = 10) {
     let result = '';
     // I and l are removed - O and 0 are removed
@@ -45,7 +48,9 @@ const qmStr = {
   },
   padZeros(num: number, size: number = 2) {
     // 16 -> 016 | 9 -> 009 | 177 -> 177
-    return (`000000000${num}`).substr(-size);
+    const isNegative = num < 0;
+    const absValue = (`000000000${Math.abs(num)}`).substr(-size);
+    return isNegative ? `-${absValue}` : absValue;
   },
   passDecode(pass: string) {
     if (!pass) return '';

@@ -1,5 +1,5 @@
 export default {
-    // for ts
+  // for ts
   getKeyValue(obj: any, key: string) {
     return obj[key];
   },
@@ -12,6 +12,8 @@ export default {
   // objsAreTheSame (ex qoAreSameObj)
   // renameObjKey
   // objIsEmpty (ex qoIsObjEmpty || objIsEmpty)
+  // setValueByKey
+  // @ts-ignore
   // copyAvaibleFields (ex copyFieldsToEdit)
 
   addEmptyOptionToList(optionsList: any[], { prop = 'name', title = 'Todos', noneId = 0 } = {}) {
@@ -23,12 +25,15 @@ export default {
     newList.unshift(noneOption);
     return newList;
   },
-  copyAvaibleFields(ObjEditable: object, ObjToCopy: object) {
-    for (const key in ObjEditable) {
-      if (typeof this.getKeyValue(ObjToCopy, key) !== 'undefined') {
-        this.setKeyValue(ObjEditable, key, this.getKeyValue(ObjToCopy, key));
+  copyAvaibleFields(destinationObj?: object, originObj?: object) {
+    if (!destinationObj || !originObj) return;
+    Object.keys(destinationObj).forEach((key) => {
+      // @ts-ignore
+      if (typeof originObj[key] !== 'undefined') {
+        // @ts-ignore
+        destinationObj[key] = originObj[key]
       }
-    }
+    });
   },
   isArray(obj: [object, any[]]) {
     if (!obj) return false;
@@ -56,5 +61,9 @@ export default {
       && Object.keys(obj).length === 0
       && Object.getPrototypeOf(obj) === Object.prototype
     );
+  },
+  setValueByKey(obj: object, key: string, value: any) {
+    // @ts-ignore
+    obj[key] = value;
   },
 }; // export default

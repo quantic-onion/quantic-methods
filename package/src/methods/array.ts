@@ -1,4 +1,6 @@
 import qmObj from './obj';
+// @ts-ignore
+import { ckNotify } from 'cleek';
 import { objectWithId } from '../types/parameters';
 
 type SqlOrderType = 'DESC' | 'ASC';
@@ -37,6 +39,9 @@ const qmArray = {
   },
   getRandomElementOfArray(arr: any[]) {
     return arr[Math.floor(Math.random() * arr.length)];
+  },
+  insert(arr: any[], index: number, item: any) {
+    arr.splice(index, 0, item)
   },
   removeOfArray(list: any[], findFunction: () => number) {
     if (!list || !findFunction) return;
@@ -93,6 +98,15 @@ const qmArray = {
       });
       return value;
     });
+  },
+  validateFields(fields: [boolean, string][]) {
+    for (const field of fields) {
+      if (field[0]) {
+        ckNotify.notifyError(field[1]);
+        return false;
+      }
+    }
+    return true;
   },
 }; // export default
 
