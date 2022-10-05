@@ -116,14 +116,22 @@ function setDate(dateParam: DateParam, diference?: DateDiference) {
   if (!dateParam) return setDateDifference(new Date(), diference);
   // passed date
   if (typeof dateParam === 'string') {
-    if (dateParam.length < 16) dateParam = `${dateParam.slice(0, )}T00:00:00` // if has not time, set time to 0
+    if (dateParam.length < 16) dateParam = dateParam.slice(0, 10) // remove timezone
     return setDateDifference(new Date(dateParam), diference);
   }
   // date by diference
   return setDateDifference(new Date(), dateParam);
 }
-function setDatetime(datetime: DatetimeParam) {
-  return setDate(datetime);
+function setDatetime(dateParam: DateParam, diference?: DateDiference) {
+  // current date
+  if (!dateParam) return setDateDifference(new Date(), diference);
+  // passed date
+  if (typeof dateParam === 'string') {
+    if (dateParam.length < 16) dateParam = `${dateParam.slice(0, )}T00:00:00` // if has not time, set time to 0
+    return setDateDifference(new Date(dateParam), diference);
+  }
+  // date by diference
+  return setDateDifference(new Date(), dateParam);
 }
 function getDatesInterval(date1: DateParam, date2: DateParam) {
   return intervalToDuration({
@@ -264,8 +272,15 @@ export default {
     // return diference in days
     // (just full days count)
     // (allways positive)
-    if (!date1 && !date2) return 0;
+    if (!date1 || !date2) return 0;
     return getDatesInterval(date1, date2).days || 0;
+  },
+  datesDifferenceInYears(date1?: DateParam, date2?: DateParam) {
+    // return diference in years
+    // (just full years count)
+    // (allways positive)
+    if (!date1 || !date2) return 0;
+    return getDatesInterval(date1, date2).years || 0;
   },
 
   // PRESENTATION

@@ -1,3 +1,5 @@
+import qmStr from './str';
+
 export default {
   // for ts
   getKeyValue(obj: any, key: string) {
@@ -55,12 +57,29 @@ export default {
     }
     return true;
   },
+  pascalToCamelCase(obj: object) {
+    for (let [key, value] of Object.entries(obj)) {
+      if (typeof value === 'object' && value) {
+        this.pascalToCamelCase(value);
+      }
+      this.renameKey(obj, key, qmStr.pascalToCamelCase(key));
+    }
+  },
   qoIsObjEmpty(obj: object = {}) {
     return (
       obj
       && Object.keys(obj).length === 0
       && Object.getPrototypeOf(obj) === Object.prototype
     );
+  },
+  renameKey(obj: object, oldKey: string, newKey: string) {
+    // @ts-ignore
+    if (typeof obj[oldKey] === 'undefined') return;
+    if (oldKey === newKey) return;
+    // @ts-ignore
+    Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey));
+    // @ts-ignore
+    delete obj[oldKey];
   },
   setValueByKey(obj: object, key: string, value: any) {
     // @ts-ignore

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import qmObj from './obj';
 
-type DbMethod = 'delete' | 'get' | 'post' | 'put';
+type DbMethod = 'delete' | 'get' | 'post' | 'put' | 'patch';
+type CodeCase = 'pascal';
 
 function checkStatus(status: number) {
   if (status === 404) return false;
@@ -10,46 +11,16 @@ function checkStatus(status: number) {
 
 
 function responsePascalToCamelCase(data: any) {
-  function renameObjKey(obj: object, oldKey: string, newKey: string) {
-    // @ts-ignore
-    if (typeof obj[oldKey] === 'undefined') return;
-    if (oldKey === newKey) return;
-    // @ts-ignore
-    Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey));
-    // @ts-ignore
-    delete obj[oldKey];
-  }
-  
-  function strPascalToCamelCase(str: string) {
-    if (str === 'ID') return 'id';
-    let res = str.charAt(0).toLowerCase() + str.slice(1);
-    const lastTwoChars = res.slice(res.length - 2);
-    if (lastTwoChars === 'ID'){
-      res = `${res.slice(0, res.length - 2)}Id`;
-    }
-    return res;
-  }
-
-  function objPascalToCamelCase(obj: object) {
-    for (let [key, value] of Object.entries(obj)) {
-      if (typeof value === 'object' && value) {
-        objPascalToCamelCase(value);
-      }
-      renameObjKey(obj, key, strPascalToCamelCase(key));
-    }
-  }
-
   if (!data) return data;
-
   if (typeof data === 'object') {
     if (qmObj.isArray(data)) {
       // array
       data.forEach((dataItem: object) => {
-        objPascalToCamelCase(dataItem);
+        qmObj.pascalToCamelCase(dataItem);
       });
     } else {
       // object
-      objPascalToCamelCase(data);
+      qmObj.pascalToCamelCase(data);
     }
   }
   return data;
@@ -59,6 +30,7 @@ function callAxios(method: DbMethod, url: string, params?: object, headers?: obj
   if (method === 'get') return axios.get(url, { params: params, ...headers });
   if (method === 'put') return axios.put(url, params, headers);
   if (method === 'post') return axios.post(url, params, headers);
+  if (method === 'patch') return axios.patch(url, params, headers);
   if (method === 'delete') return axios.delete(url);
   return axios.get(url, { params: params });
 }
@@ -81,22 +53,22 @@ export default {
     headers?: object,
     success?: (res: any, count?: number) => void,
     error?: (res: any) => void,
+    convertionFrom?: CodeCase,
   ) {
     callAxios(method, `${serverUrl}${url}`, params, headers)
-    .then(res => {
+    .then((res) => {
       if (!checkStatus(res.status)) {
         console.log('EL STATUS ESTÁ MAL');
       }
       return res;
     })
     .then((res) => {
-      const resData = responsePascalToCamelCase(res.data.data);
-      if (qmObj.isArray(resData)) {
-        const count = +res.data.count | 0;
-        if (success) success(resData, count);
+      if (convertionFrom === 'pascal') {
+        const resData = responsePascalToCamelCase(res.data.data);
+        if (success) success(resData);
         return;
       }
-      if (success) success(resData);
+      if (success) success(res.data);
     })
     .catch((err) => {
       console.log('Error al conectar DB', err);
@@ -108,10 +80,12 @@ export default {
     serverUrl: string,
     url: string,
     params: object,
+    headers: object,
     successCb: (res: any) => void,
     listLenghtCb: (listLenght: number) => void,
+    convertionFrom?: CodeCase,
 ) {
-    this.connectDatabase(method, serverUrl, url, params, {}, (res) => {
+    this.connectDatabase(method, serverUrl, url, params, headers, (res) => {
       const params2 = {
         ...params,
         justCount: true,
@@ -119,10 +93,10 @@ export default {
         page: undefined,
       };
       successCb(res);
-      this.connectDatabase(method, serverUrl, url, params2, {}, (listLenght: number) => {
+      this.connectDatabase(method, serverUrl, url, params2, headers, (listLenght: number) => {
         listLenghtCb(listLenght);
-      });
-    })
+      }, undefined, convertionFrom);
+    }, undefined, convertionFrom)
   },
   connectPHP(
     {

@@ -52,6 +52,15 @@ const qmStr = {
     const absValue = (`000000000${Math.abs(num)}`).substr(-size);
     return isNegative ? `-${absValue}` : absValue;
   },
+  pascalToCamelCase(str: string) {
+    if (str === 'ID') return 'id';
+    let res = str.charAt(0).toLowerCase() + str.slice(1);
+    const lastTwoChars = res.slice(res.length - 2);
+    if (lastTwoChars === 'ID'){
+      res = `${res.slice(0, res.length - 2)}Id`;
+    }
+    return res;
+  },
   passDecode(pass: string) {
     if (!pass) return '';
     const codifierNum = 7;
