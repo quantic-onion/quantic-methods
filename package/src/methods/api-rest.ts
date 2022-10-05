@@ -9,7 +9,6 @@ function checkStatus(status: number) {
   return true;
 }
 
-
 function responsePascalToCamelCase(data: any) {
   if (!data) return data;
   if (typeof data === 'object') {
@@ -36,13 +35,7 @@ function callAxios(method: DbMethod, url: string, params?: object, headers?: obj
 }
 
 export default {
-  connectApi(
-    method: DbMethod,
-    url: string,
-    params?: object,
-    successCb?: (res: any) => void,
-    errorCb?: (res: any) => void,
-  ) {
+  connectApi(method: DbMethod, url: string, params?: object, successCb?: (res: any) => void, errorCb?: (res: any) => void) {
     callAxios(method, url, params).then(successCb).catch(errorCb);
   },
   connectDatabase(
@@ -98,28 +91,26 @@ export default {
       }, undefined, convertionFrom);
     }, undefined, convertionFrom)
   },
-  connectPHP(
-    {
-      path,
-      params,
-      success,
-      error,
-      isLocalhost,
-      serverUrl,
-      debug,
-    }: {
-      path: string,
-      params: object,
-      errorMsg: string,
-      success?: (res: any) => void,
-      error?: (res: any) => void,
-      isLocalhost: boolean,
-      serverUrl: string,
-      debug?: boolean,
-    },
-  ) {
-    const file = path.split('/')[0];
-    const action = path.split('/')[1];
+  connectPHP({
+    path,
+    params,
+    success,
+    error,
+    isLocalhost,
+    serverUrl,
+    debug,
+  }: {
+    path: string;
+    params: object;
+    errorMsg: string;
+    success?: (res: any) => void;
+    error?: (res: any) => void;
+    isLocalhost: boolean;
+    serverUrl: string;
+    debug?: boolean;
+  }) {
+    const file = path.split("/")[0];
+    const action = path.split("/")[1];
     setDefaultNullValue(params);
     checkData(file, action);
     if (debug) logExtraInfo(params);
@@ -130,31 +121,29 @@ export default {
     const realParams = {
       ...params,
       action,
-      _subdomain: isLocalhost ? 'localhost' : '',
+      _subdomain: isLocalhost ? "localhost" : "",
     };
     axios.post(url, realParams).then(realSuccess).catch(realError);
   },
-  connectDoublePHP(
-    {
-      path,
-      params,
-      errorMsg,
-      cb1,
-      cb2,
-      debug,
-      isLocalhost,
-      serverUrl,
-    }: {
-      path: string,
-      params: object,
-      errorMsg: string,
-      cb1: (res: any) => void,
-      cb2: (res: any) => void,
-      debug?: boolean,
-      isLocalhost: boolean,
-      serverUrl: string,
-    },
-  ) {
+  connectDoublePHP({
+    path,
+    params,
+    errorMsg,
+    cb1,
+    cb2,
+    debug,
+    isLocalhost,
+    serverUrl,
+  }: {
+    path: string;
+    params: object;
+    errorMsg: string;
+    cb1: (res: any) => void;
+    cb2: (res: any) => void;
+    debug?: boolean;
+    isLocalhost: boolean;
+    serverUrl: string;
+  }) {
     if (!cb1) return;
     this.connectPHP({
       path,
@@ -187,7 +176,7 @@ export default {
       },
     });
   },
-}
+};
 
 // PHP CONECTION
 const errorConsoleStyle = 'background: #EA5455; color: white; display: block;';
