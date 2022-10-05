@@ -64,13 +64,7 @@ function callAxios(method: DbMethod, url: string, params?: object, headers?: obj
 }
 
 export default {
-  connectApi(
-    method: DbMethod,
-    url: string,
-    params?: object,
-    successCb?: (res: any) => void,
-    errorCb?: (res: any) => void,
-  ) {
+  connectApi(method: DbMethod, url: string, params?: object, successCb?: (res: any) => void, errorCb?: (res: any) => void) {
     callAxios(method, url, params).then(successCb).catch(errorCb);
   },
   connectDatabase(
@@ -80,72 +74,71 @@ export default {
     params?: object,
     headers?: object,
     success?: (res: any, count?: number) => void,
-    error?: (res: any) => void,
+    error?: (res: any) => void
   ) {
     callAxios(method, `${serverUrl}${url}`, params, headers)
-    .then(res => {
-      if (!checkStatus(res.status)) {
-        console.log('EL STATUS ESTÁ MAL');
-      }
-      return res;
-    })
-    .then((res) => {
-      const resData = responsePascalToCamelCase(res.data.data);
-      if (qmObj.isArray(resData)) {
-        const count = +res.data.count | 0;
-        if (success) success(resData, count);
-        return;
-      }
-      if (success) success(resData);
-    })
-    .catch((err) => {
-      console.log('Error al conectar DB', err);
-      if (error) error(err);
-    });
+      .then((res) => {
+        if (!checkStatus(res.status)) {
+          console.log("EL STATUS ESTÁ MAL");
+        }
+        return res;
+      })
+      .then((res) => {
+        const resData = responsePascalToCamelCase(res.data.data);
+        if (qmObj.isArray(resData)) {
+          const count = +res.data.count | 0;
+          if (success) success(resData, count);
+          return;
+        }
+        if (success) success(resData);
+      })
+      .catch((err) => {
+        console.log("Error al conectar DB", err);
+        if (error) error(err);
+      });
   },
   connectDatabaseAndGetLenght(
     method: DbMethod,
     serverUrl: string,
     url: string,
-    params: object,
-    successCb: (res: any) => void,
-    listLenghtCb: (listLenght: number) => void,
-) {
-    this.connectDatabase(method, serverUrl, url, params, {}, (res) => {
+    params?: object,
+    headers?: object,
+    successCb?: (res: any) => void,
+    listLenghtCb?: (listLenght: number) => void
+  ) {
+    this.connectDatabase(method, serverUrl, url, params, headers, (res) => {
       const params2 = {
         ...params,
         justCount: true,
         pageSize: undefined,
         page: undefined,
       };
-      successCb(res);
-      this.connectDatabase(method, serverUrl, url, params2, {}, (listLenght: number) => {
-        listLenghtCb(listLenght);
+      if (successCb) successCb(res);
+      this.connectDatabase(method, serverUrl, url, params2, headers, (listLenght: number) => {
+        if (listLenghtCb) listLenghtCb(listLenght);
       });
-    })
+    });
   },
-  connectPHP(
-    {
-      path,
-      params,
-      success,
-      error,
-      isLocalhost,
-      serverUrl,
-      debug,
-    }: {
-      path: string,
-      params: object,
-      errorMsg: string,
-      success?: (res: any) => void,
-      error?: (res: any) => void,
-      isLocalhost: boolean,
-      serverUrl: string,
-      debug?: boolean,
-    },
-  ) {
-    const file = path.split('/')[0];
-    const action = path.split('/')[1];
+  connectPHP({
+    path,
+    params,
+    success,
+    error,
+    isLocalhost,
+    serverUrl,
+    debug,
+  }: {
+    path: string;
+    params: object;
+    errorMsg: string;
+    success?: (res: any) => void;
+    error?: (res: any) => void;
+    isLocalhost: boolean;
+    serverUrl: string;
+    debug?: boolean;
+  }) {
+    const file = path.split("/")[0];
+    const action = path.split("/")[1];
     setDefaultNullValue(params);
     checkData(file, action);
     if (debug) logExtraInfo(params);
@@ -156,31 +149,29 @@ export default {
     const realParams = {
       ...params,
       action,
-      _subdomain: isLocalhost ? 'localhost' : '',
+      _subdomain: isLocalhost ? "localhost" : "",
     };
     axios.post(url, realParams).then(realSuccess).catch(realError);
   },
-  connectDoublePHP(
-    {
-      path,
-      params,
-      errorMsg,
-      cb1,
-      cb2,
-      debug,
-      isLocalhost,
-      serverUrl,
-    }: {
-      path: string,
-      params: object,
-      errorMsg: string,
-      cb1: (res: any) => void,
-      cb2: (res: any) => void,
-      debug?: boolean,
-      isLocalhost: boolean,
-      serverUrl: string,
-    },
-  ) {
+  connectDoublePHP({
+    path,
+    params,
+    errorMsg,
+    cb1,
+    cb2,
+    debug,
+    isLocalhost,
+    serverUrl,
+  }: {
+    path: string;
+    params: object;
+    errorMsg: string;
+    cb1: (res: any) => void;
+    cb2: (res: any) => void;
+    debug?: boolean;
+    isLocalhost: boolean;
+    serverUrl: string;
+  }) {
     if (!cb1) return;
     this.connectPHP({
       path,
@@ -213,7 +204,7 @@ export default {
       },
     });
   },
-}
+};
 
 // PHP CONECTION
 const errorConsoleStyle = 'background: #EA5455; color: white; display: block;';
