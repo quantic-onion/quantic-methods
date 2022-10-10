@@ -117,7 +117,8 @@ function setDate(dateParam: DateParam, diference?: DateDiference) {
   // passed date
   if (typeof dateParam === 'string') {
     if (dateParam.length < 16) dateParam = dateParam.slice(0, 10) // remove timezone
-    return setDateDifference(new Date(dateParam), diference);
+    if (dateParam.length > 10) dateParam = dateParam.slice(0, 10) // remove timezone
+    return setDateDifference(new Date(`${dateParam}T00:00:00`), diference); // force timezone ignore
   }
   // date by diference
   return setDateDifference(new Date(), dateParam);
