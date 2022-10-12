@@ -90,6 +90,7 @@ const qmStr = {
       .normalize();
   },
   removeWhiteSpaces(str: string) {
+    if (!str) return str;
     str = str.trim(); // delete start and final whitespace
     str = str.replace(/\s\s+/g, ' '); // replace multiple whitespace with one
     return str;
