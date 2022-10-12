@@ -1,4 +1,15 @@
-import qmStr from '$packageMethods/str';
+import qmStr from './str';
+
+// day of week
+export type DayOfWeekLowerCase = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+export type DayOfWeekSpanishLowerCase = 'domingo' | 'lunes' | 'martes' | 'miércoles' | 'jueves' | 'viernes' | 'sábado';
+export type DayOfWeekSpanish = 'Domingo' | 'Lunes' | 'Martes' | 'Miércoles' | 'Jueves' | 'Viernes' | 'Sábado';
+// month name
+export type MonthNameLowerCase = 'january' | 'february' | 'march' | 'april' | 'may' | 'june' | 'july' | 'august' | 'september' | 'october' | 'november' | 'december';
+export type MonthName = 'January' | 'February' | 'March' | 'April' | 'May' | 'June' | 'July' | 'August' | 'September' | 'October' | 'November' | 'December';
+export type MonthNameSpanishLowerCase = 'enero' | 'febrero' | 'marzo' | 'abril' | 'mayo' | 'junio' | 'julio' | 'agosto' | 'septiembre' | 'octubre' | 'noviembre' | 'diciembre';
+export type MonthNameSpanish = 'Enero' | 'Febrero' | 'Marzo' | 'Abril' | 'Mayo' | 'Junio' | 'Julio' | 'Agosto' | 'Septiembre' | 'Octubre' | 'Noviembre' | 'Diciembre';
 
 import {
   compareAsc,
@@ -7,35 +18,38 @@ import {
   addWeeks,
   addMonths,
   addYears,
+  intervalToDuration,
   format as _format
 } from 'date-fns';
-import intervalToDuration from 'date-fns/intervalToDuration'
-import { es } from 'date-fns/locale';
+import { es as languajeEs } from 'date-fns/locale';
 
 // types
 type Languaje = 'es' | 'en';
 type Time = string | undefined; // hh:mm
-type Date = string; // yyyy-mm-dd
-type DateDiference = {
-  seconds: number,
-  days: number,
-  weeks: number,
-  months: number,
-  years: number,
-};
-type Datetime = string
-
+type TsDate = string; // yyyy-mm-dd
 type presentedDate = string; // dd/mm/yyyy
 type DateFormat = 'dd/mm' | 'dd/mm/yy' | 'dd/mm/yyyy';
-type DateParam = Date | DateDiference | undefined
-type DatetimeParam = Datetime | undefined
+type DateDiference = {
+  seconds?: number,
+  days?: number,
+  weeks?: number,
+  months?: number,
+  years?: number,
+};
+type TsDatetime = string
+
+type DateParam = TsDate | DateDiference | undefined | null
+type DatetimeParam = TsDatetime | undefined | null
 // end types
 
 
 // constants
 // const MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
 const DEFAULT_LANG = 'en';
-const DAYS_OF_WEEK_NAMES = {
+const DAYS_OF_WEEK_NAMES: {
+  es: DayOfWeekSpanish[],
+  en: DayOfWeek[],
+} = {
   es: [
     'Domingo',
     'Lunes',
@@ -86,30 +100,39 @@ const MONTH_NAMES = {
   ],
 };
 // end constants
-
+// LOCAL FUNCTIONS
+function setDateDifference(date: Date, diference?: DateDiference) {
+  if (!diference) return date;
+  if (diference.seconds) addSeconds(date, diference.seconds);
+  if (diference.days) date = addDays(date, diference.days);
+  if (diference.weeks) date = addWeeks(date, diference.weeks);
+  if (diference.months) date = addMonths(date, diference.months);
+  if (diference.years) date = addYears(date, diference.years);
+  return date;
+}
 // GLOBAL FUNCTIONS
-// getDate
-function setDate(date: DateParam = undefined) {
+function setDate(dateParam: DateParam, diference?: DateDiference) {
   // current date
-  if (!date) return new Date();
+  if (!dateParam) return setDateDifference(new Date(), diference);
   // passed date
-  if (typeof date === 'string') {
-    // if has not time, set time to 0
-    if (date.length < 16) date = `${date.slice(0, )}T00:00:00`
-    return new Date(date);
+  if (typeof dateParam === 'string') {
+    if (dateParam.length < 16) dateParam = dateParam.slice(0, 10) // remove timezone
+    if (dateParam.length > 10) dateParam = dateParam.slice(0, 10) // remove timezone
+    return setDateDifference(new Date(`${dateParam}T00:00:00`), diference); // force timezone ignore
   }
   // date by diference
-  const Diference = date;
-  let newDate = new Date();
-  if (Diference.seconds) addSeconds(newDate, Diference.seconds);
-  if (Diference.days) newDate = addDays(newDate, Diference.days);
-  if (Diference.weeks) newDate = addWeeks(newDate, Diference.weeks);
-  if (Diference.months) newDate = addMonths(newDate, Diference.months);
-  if (Diference.years) newDate = addYears(newDate, Diference.years);
-  return newDate;
+  return setDateDifference(new Date(), dateParam);
 }
-function setDatetime(datetime: DatetimeParam) {
-  return setDate(datetime);
+function setDatetime(dateParam: DateParam, diference?: DateDiference) {
+  // current date
+  if (!dateParam) return setDateDifference(new Date(), diference);
+  // passed date
+  if (typeof dateParam === 'string') {
+    if (dateParam.length < 16) dateParam = `${dateParam.slice(0, )}T00:00:00` // if has not time, set time to 0
+    return setDateDifference(new Date(dateParam), diference);
+  }
+  // date by diference
+  return setDateDifference(new Date(), dateParam);
 }
 function getDatesInterval(date1: DateParam, date2: DateParam) {
   return intervalToDuration({
@@ -118,14 +141,14 @@ function getDatesInterval(date1: DateParam, date2: DateParam) {
   }) // => { years: 39, months: 2, days: 20, hours: 7, minutes: 5, seconds: 0 }
 }
 
-function formatDate(date: DateParam, format: string) {
-  return _format(setDate(date), format);
-}
+function formatDate(date: DateParam, format: string, diference?: DateDiference) {
+  return _format(setDate(date, diference), format);
+} 
 function formatDatetime(datetime: DatetimeParam, format: string) {
   return _format(setDatetime(datetime), format);
 }
 function formatDateLang(date: DateParam, format: string, lang: Languaje) {
-  const langParam = lang === 'es' ? es : undefined;
+  const langParam = lang === 'es' ? languajeEs : undefined;
   return _format(setDate(date), format, { locale: langParam });
 }
 function formatDateCapitalized(date: DateParam, format: string) {
@@ -157,7 +180,7 @@ export default {
   // MINUTES
   // hourToMin
   // minToHour
-  hourToMin(time: Time) {
+  hourToMin(time?: Time) {
     if (!time) return '';
     // get hour as string and return min as number
     const hour = time.substring(0, time.length - 3);
@@ -187,66 +210,78 @@ export default {
   // getMonthName
   // getTime
   // getYear
-  getDate(date: DateParam = undefined) {
-    return formatDate(date, 'yyyy-MM-dd')
+  getDate(date?: DateParam, difference?: DateDiference) {
+    return formatDate(date, 'yyyy-MM-dd', difference)
   },
-  getDatetime(datetime: DatetimeParam = undefined) {
+  getDatetime(datetime?: DatetimeParam) {
     return `${this.getDate(datetime)} ${this.getTime(datetime)}`;
   },
-  getDayOfMonth(date: DateParam = undefined) {
+  getDayOfMonth(date?: DateParam) {
     return formatDate(date, 'd');
   },
-  getDayOfWeekNum(date: DateParam = undefined) {
+  getDayOfWeekNum(date?: DateParam) {
     // return number of day. Between 1 and 7
     return formatDate(date, 'i');
   },
-  getDayOfWeekName(date: DateParam = undefined, lang: Languaje = DEFAULT_LANG) {
-    return formatDateLangCapitalized(date, 'iiii', lang);
+  getDayOfWeekName(date?: DateParam, lang: Languaje = DEFAULT_LANG) {
+    const format = 'iiii';
+    return formatDateLangCapitalized(date, format, lang) as DayOfWeek;
   },
-  getDayOfYear(date: DateParam = undefined) {
+  getDayOfYear(date?: DateParam) {
     // return number of day. Between 1 and 366
     return formatDate(date, 'D');
   },
-  getMinutesOfDay(datetime: DatetimeParam = undefined) {
+  getMinutesOfDay(datetime?: DatetimeParam) {
     const h = formatDatetime(datetime, 'kk');
     const min = formatDatetime(datetime, 'mm');
     return (+h * 60) + (+min);
   },
-  getMonthNum(date: DateParam = undefined) {
+  getMonthNum(date?: DateParam) {
     // return number of month. Between 01 and 12
     return formatDate(date, 'MM');
   },
-  getMonthName(date: DateParam = undefined, lang: Languaje = DEFAULT_LANG) {
+  getMonthName(date?: DateParam, lang: Languaje = DEFAULT_LANG) {
     return formatDateLangCapitalized(date, 'MMMM', lang);
   },
-  getTime(datetime: DatetimeParam = undefined, useMiliseconds: boolean = false) {
+  getMonthNameByMonth(monthNum: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12) {
+    if (!+monthNum || +monthNum > 12 || +monthNum < 0) return '';
+    return MONTH_NAMES.es[monthNum - 1]
+  },
+  getTime(datetime?: DatetimeParam, useMiliseconds: boolean = false) {
     if (!useMiliseconds) return formatDatetime(datetime, 'kk:mm:ss');
     return formatDatetime(datetime, 'kk:mm:ss:SSSSSS');
   },
-  getYear(date: DateParam = undefined, format: 'yy' | 'yyyy' = 'yyyy') {
-    return formatDateCapitalized(date, format);
+  getYear(date?: DateParam, format: 'yy' | 'yyyy' = 'yyyy') {
+    return +formatDateCapitalized(date, format);
   },
 
   // COMPARISON
-  dateIsNewer(date1: DateParam = undefined, date2: DateParam = undefined) {
+  dateIsNewer(date1?: DateParam, date2?: DateParam) {
     // compare two dates and return true if date1 is newer than date2
-    if (date1 === undefined && date2 === undefined) return false;
+    if (!date1 && !date2) return false;
     return this.dateIsNewerFunc(date1, date2) === 1;
   },
-  dateIsNewerFunc(date1: DateParam = undefined, date2: DateParam = undefined) {
+  dateIsNewerFunc(date1?: DateParam, date2?: DateParam) {
     // compare two dates and returns:
     // -1 if date1 < date2
     //  0 if date1 = date2
     //  1 if date1 > date2
-    if (date1 === undefined && date2 === undefined) return 0;
+    if (!date1 && !date2) return 0;
     return compareAsc(setDate(date1), setDate(date2));
   },
-  datesDifferenceInDays(date1: DateParam = undefined, date2: DateParam = undefined) {
+  datesDifferenceInDays(date1?: DateParam, date2?: DateParam) {
     // return diference in days
     // (just full days count)
     // (allways positive)
-    if (date1 === undefined && date2 === undefined) return 0;
+    if (!date1 || !date2) return 0;
     return getDatesInterval(date1, date2).days || 0;
+  },
+  datesDifferenceInYears(date1?: DateParam, date2?: DateParam) {
+    // return diference in years
+    // (just full years count)
+    // (allways positive)
+    if (!date1 || !date2) return 0;
+    return getDatesInterval(date1, date2).years || 0;
   },
 
   // PRESENTATION
