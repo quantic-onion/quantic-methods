@@ -30,8 +30,8 @@ function callAxios(method: DbMethod, url: string, params?: object, headers?: obj
   if (method === 'put') return axios.put(url, params, headers);
   if (method === 'post') return axios.post(url, params, headers);
   if (method === 'patch') return axios.patch(url, params, headers);
-  if (method === 'delete') return axios.delete(url);
-  return axios.get(url, { params: params });
+  if (method === 'delete') return axios.delete(url, headers);
+  return axios.get(url, { params: params, ...headers });
 }
 
 export default {
