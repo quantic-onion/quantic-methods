@@ -43,7 +43,7 @@ const qmArray = {
   insert(arr: any[], index: number, item: any) {
     arr.splice(index, 0, item)
   },
-  removeOfArray(list: any[], findFunction: () => number) {
+  removeOfArray(list: any[], findFunction: () => boolean) {
     if (!list || !findFunction) return;
     const index = list.findIndex(findFunction);
     if (index === -1) return;
