@@ -62,12 +62,13 @@ const qmArray = {
   sort<T>(arr: T[], keys: string | SqlKeyPair | SqlKeyPair[]) : T[] {
     // sort array of objects
     // keys can be: 'key' | [key, 'DESC'] | [[key1, 'ASC'], key2, [key3, 'DESC']
-
+  
     function varIsSqlKeys(varToCheck: SqlKeyPair | SqlKeyPair[]): varToCheck is SqlKeyPair {
       return typeof varToCheck[0] === 'string' && (varToCheck[1] === 'DESC' || varToCheck[1] === 'ASC');
     } 
-    function forceOrderType(keyPair: SqlKeyPair) {
-      if (typeof keyPair[1] === 'undefined') keyPair[1] = 'ASC';
+    function forceOrderType([keyName, order]: SqlKeyPair) {
+      if (order !== 'DESC') order = 'ASC';
+      return [keyName, order] as SqlKeysPairFull;
     }
     // clean the data - anytyhing -> SqlKeyPair[]
     let keysList: SqlKeyPair[];
@@ -81,10 +82,10 @@ const qmArray = {
       }
     }
     const finalKeysList: SqlKeysPairFull[] = [];
-    keysList.forEach(keyPair => {
-      forceOrderType(keyPair);
-      finalKeysList.push()
+    keysList.forEach((keyPair) => {
+      finalKeysList.push(forceOrderType(keyPair))
     });
+    console.log('finalKeysList', ...finalKeysList);
     // now keysList is something like [[key1, 'DESC'], [key2], [key3], [key4, 'DESC'])
     return arr.sort((a, b) => {
       let value = 0;
