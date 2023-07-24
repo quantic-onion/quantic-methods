@@ -65,6 +65,14 @@ export default {
       this.renameKey(obj, key, qmStr.pascalToCamelCase(key));
     }
   },
+  snakeToCamelCase(obj: object) {
+    for (let [key, value] of Object.entries(obj)) {
+      if (typeof value === 'object' && value) {
+        this.snakeToCamelCase(value);
+      }
+      this.renameKey(obj, key, qmStr.snakeToCamelCase(key));
+    }
+  },
   qoIsObjEmpty(obj: object = {}) {
     return (
       obj
