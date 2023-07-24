@@ -102,7 +102,7 @@ const qmArray = {
   validateFields(fields: [boolean, string][]) {
     for (const field of fields) {
       if (field[0]) {
-        ckNotify.notifyError(field[1]);
+        ckNotify.notifyError(field[1], 'Atención');
         return false;
       }
     }
