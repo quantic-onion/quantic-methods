@@ -1,11 +1,11 @@
 {
 	"name": "quantic-methods",
-	"version": "1.6.46",
+	"version": "1.6.47",
 	"description": "Quantic Onion's general methods compilation",
 	"files": [
 		"dist"
 	],
-	"main": "./dist/quantic-methods.umd.cjs",
+	"main": "./dist/quantic-methods.umd.js",
 	"module": "./dist/quantic-methods.es.js",
 	"exports": {
 		".": {
