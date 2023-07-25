@@ -8,7 +8,8 @@ module.exports = defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'quantic-methods',
-      fileName: (format) => `quantic-methods.${format}.ts`
+      // the proper extensions will be added
+      fileName: "quantic-methods",
     },
     rollupOptions: {},
     plugins: [
