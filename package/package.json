@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/quantic-methods.es.ts",
-      "require": "./dist/quantic-methods.umd.ts"
+      "require": "./dist/quantic-methods.umd.ts",
+      "types": "./dist/main.d.ts"
     }
   },
   "scripts": {
