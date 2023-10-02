@@ -16,6 +16,10 @@ export default {
     if (!num) return 0;
     return +parseFloat(`${num}`).toFixed(precision);
   },
+  presentFloat(num: number, precision = 2) {
+    let numStr = parseFloat(`${num}`).toFixed(precision);
+    return numStr.replace(/\./g, ',');
+  },
   presentNum(num: number, forceDecimal = false) {
     // validate
     num = +num;
