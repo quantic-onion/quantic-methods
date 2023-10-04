@@ -223,13 +223,14 @@ export default {
 	getDatetime(datetime?: DatetimeParam) {
 		return `${this.getDate(datetime)} ${this.getTime(datetime)}`;
 	},
-	getDatetimeUtc() {
-		const now = new Date();
-		const year = now.getUTCFullYear();
-		const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-		const day = String(now.getUTCDate()).padStart(2, '0');
-		const hours = String(now.getUTCHours()).padStart(2, '0');
-		const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+	getDatetimeUtc(datetime?: Date) {
+		let date = new Date();
+		if (datetime) date = new Date(datetime);
+		const year = date.getUTCFullYear();
+		const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+		const day = String(date.getUTCDate()).padStart(2, '0');
+		const hours = String(date.getUTCHours()).padStart(2, '0');
+		const minutes = String(date.getUTCMinutes()).padStart(2, '0');
 		return `${year}-${month}-${day}T${hours}:${minutes}`;
 	},
 	getDayOfMonth(date?: DateParam) {
