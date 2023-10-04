@@ -207,6 +207,7 @@ export default {
 	// DATE
 	// getDate
 	// getDatetime
+	// getDatetimeUtc
 	// getDayOfMonth
 	// getDayOfWeekNum
 	// getDayOfWeekName
@@ -216,12 +217,20 @@ export default {
 	// getMonthName
 	// getTime
 	// getYear
-	// getCurrentUtcDatetime
 	getDate(date?: DateParam, difference?: DateDiference) {
 		return formatDate(date, 'yyyy-MM-dd', difference);
 	},
 	getDatetime(datetime?: DatetimeParam) {
 		return `${this.getDate(datetime)} ${this.getTime(datetime)}`;
+	},
+	getDatetimeUtc() {
+		const now = new Date();
+		const year = now.getUTCFullYear();
+		const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+		const day = String(now.getUTCDate()).padStart(2, '0');
+		const hours = String(now.getUTCHours()).padStart(2, '0');
+		const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+		return `${year}-${month}-${day}T${hours}:${minutes}`;
 	},
 	getDayOfMonth(date?: DateParam) {
 		return formatDate(date, 'd');
@@ -261,15 +270,6 @@ export default {
 	},
 	getYear(date?: DateParam, format: 'yy' | 'yyyy' = 'yyyy') {
 		return +formatDateCapitalized(date, format);
-	},
-	getCurrentUtcDatetime() {
-		const now = new Date();
-		const year = now.getUTCFullYear();
-		const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-		const day = String(now.getUTCDate()).padStart(2, '0');
-		const hours = String(now.getUTCHours()).padStart(2, '0');
-		const minutes = String(now.getUTCMinutes()).padStart(2, '0');
-		return `${year}-${month}-${day}T${hours}:${minutes}`;
 	},
 
 	// COMPARISON
