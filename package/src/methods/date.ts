@@ -322,4 +322,10 @@ export default {
 		const year = date.substring(6, 10);
 		return `${year}-${month}-${day}`;
 	},
+
+	// HELPERS
+	// getDaysOfTheMonth
+	getDaysOfTheMonth(year: number, month: number): number {
+		return new Date(year, month, 0).getDate();
+	},
 };
