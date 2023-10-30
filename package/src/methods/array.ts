@@ -59,6 +59,13 @@ const qmArray = {
     const index = arr.findIndex(i => qmObj.getValueByKey(i, prop) === qmObj.getValueByKey(NewItem, prop));
     if (index !== -1) arr.splice(index, 1, NewItem);
   },
+  shuffle(unshuffled: any[]) {
+    let shuffled = qmObj.deepCopy(unshuffled)
+    .map((value: any) => ({ value, sort: Math.random() }))
+    .sort((a: any, b: any) => a.sort - b.sort)
+    .map(({ value }: { value: any }) => value)
+    return shuffled;    
+  },
   sort<T>(arr: T[], keys: string | SqlKeyPair | SqlKeyPair[]) : T[] {
     // sort array of objects
     // keys can be: 'key' | [key, 'DESC'] | [[key1, 'ASC'], key2, [key3, 'DESC']
