@@ -1,6 +1,9 @@
 import qmStr from './str';
 
 const obj = {
+  deepCopy(obj: any) {
+    return JSON.parse(JSON.stringify(obj));
+  },
 	// for ts
 	getKeyValue(obj: any, key: string) {
 		return obj[key];
