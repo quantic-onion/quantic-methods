@@ -8,12 +8,6 @@ type SqlKeyPair = [string, SqlOrderType | undefined];
 type SqlKeysPairFull = [string, SqlOrderType]
 
 const qmArray = {
-  // arrayToText
-  // getRandomElementOfArray
-  // removeOfArray (ex qoRemoveOfArray)
-  // removeOfArrayById (qoRemoveOfArrayById)
-  // replaceInList (ex qoReplaceInList)
-
   arrayToText(arr: any[], key = null) {
     let msg = '';
     for (let index = 0; index < arr.length; index++) {
@@ -37,13 +31,13 @@ const qmArray = {
     }
     return msg;
   },
-  getRandomElementOfArray(arr: any[]) {
+  getRandomElementOfArray<T>(arr: T[]) {
     return arr[Math.floor(Math.random() * arr.length)];
   },
-  insert(arr: any[], index: number, item: any) {
+  insert<T>(arr: T[], index: number, item: T) {
     arr.splice(index, 0, item)
   },
-  removeOfArray(list: any[], findFunction: () => boolean) {
+  removeOfArray<T>(list: T[], findFunction: (element: T) => boolean) {
     if (!list || !findFunction) return;
     const index = list.findIndex(findFunction);
     if (index === -1) return;
@@ -54,10 +48,10 @@ const qmArray = {
     if (index === -1) return;
     list.splice(index, 1);
   },
-  replaceInList(arr: object[], NewItem: object, prop: string = 'id') {
-    if (!NewItem) return;
-    const index = arr.findIndex(i => qmObj.getValueByKey(i, prop) === qmObj.getValueByKey(NewItem, prop));
-    if (index !== -1) arr.splice(index, 1, NewItem);
+  replaceInList<T>(arr: T[], newItem: T, prop: string = 'id') {
+    if (!newItem) return;
+    const index = arr.findIndex(i => qmObj.getValueByKey(i, prop) === qmObj.getValueByKey(newItem, prop));
+    if (index !== -1) arr.splice(index, 1, newItem);
   },
   sort<T>(arr: T[], keys: string | SqlKeyPair | SqlKeyPair[]) : T[] {
     // sort array of objects
@@ -85,7 +79,6 @@ const qmArray = {
     keysList.forEach((keyPair) => {
       finalKeysList.push(forceOrderType(keyPair))
     });
-    console.log('finalKeysList', ...finalKeysList);
     // now keysList is something like [[key1, 'DESC'], [key2], [key3], [key4, 'DESC'])
     return arr.sort((a, b) => {
       let value = 0;
