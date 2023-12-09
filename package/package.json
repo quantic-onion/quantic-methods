@@ -38,7 +38,7 @@
 	},
 	"dependencies": {
 		"axios": "^0.27.1",
-		"cleek": "^2.5.4",
+		"cleek": "^2.6.82",
 		"date-fns": "^2.28.0",
 		"global": "^4.4.0"
 	}
