@@ -58,6 +58,7 @@ export type MonthNameSpanish =
 	| 'Octubre'
 	| 'Noviembre'
 	| 'Diciembre';
+type DateInWordsParts = 'day' | 'dayNum' | 'month' | 'year';
 
 import { compareAsc, addSeconds, addDays, addWeeks, addMonths, addYears, intervalToDuration, format as _format } from 'date-fns';
 import { es as languajeEs } from 'date-fns/locale';
@@ -303,8 +304,46 @@ export default {
 	},
 
 	// PRESENTATION
-	// presentDate
-	// presentTime
+	presentDateInWords(
+		date: TsDate,
+		settings?: {
+			hide?: DateInWordsParts[],
+			show?: DateInWordsParts[],
+			useRelativeTerms?: boolean,
+		},
+	) {
+    const display = {
+      day: true,
+      dayNum: true,
+      month: true,
+      year: true,
+    };
+    if (settings?.show) {
+      display.day = settings?.show?.includes('day');
+      display.dayNum = settings?.show?.includes('dayNum');
+      display.month = settings?.show?.includes('month');
+      display.year = settings?.show?.includes('year');
+		}
+    if (settings?.hide) {
+      display.day = !settings?.hide?.includes('day');
+      display.dayNum = !settings?.hide?.includes('dayNum');
+      display.month = !settings?.hide?.includes('month');
+      display.year = !settings?.hide?.includes('year');
+		}
+    // return date name like "Jueves 24 de Mayo de 2014"
+    // get object to hide parts of date. eg: { year: false,} return "Jueves 24 de Mayo"
+		if (settings?.useRelativeTerms) {
+			if (date === this.getDate()) return 'Hoy';
+			if (date === this.getDate({ days: +1 })) return 'Mañana';
+		}
+    let finalDate = '';
+    if (display.day) finalDate += ` ${this.getDayOfWeekName(date, 'es')}`;
+    if (display.dayNum) finalDate += ` ${this.getDayOfMonth(date)}`;
+    const monthsList = this.getAllMonths('es');
+    if (display.month) finalDate += ` de ${monthsList[+this.getMonthNum(date) - 1]}`;
+    if (display.year) finalDate += ` de ${this.getYear(date)}`;
+    return finalDate;
+	},
 	presentDate(date?: DateParam, format: DateFormat = 'dd/mm/yy'): presentedDate {
 		if (!date) return '';
 		let pluginFormat = 'dd/MM/yy';

@@ -3260,6 +3260,16 @@ quantic-methods@^1.6.38:
     date-fns "^2.28.0"
     global "^4.4.0"
 
+quantic-methods@^1.6.58:
+  version "1.6.58"
+  resolved "https://registry.yarnpkg.com/quantic-methods/-/quantic-methods-1.6.58.tgz#278c3dd76f8a8e2fdfac522101954e19367637e0"
+  integrity sha512-7gU9/rhNXHmvZP3Am4TqJfv9EaJWUxLwrfrapMrZlvmU0izpPKMtv0XUiEE9IOX7RwdarAKWY18QtmomKQ94uw==
+  dependencies:
+    axios "^0.27.1"
+    cleek "^2.5.4"
+    date-fns "^2.28.0"
+    global "^4.4.0"
+
 queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"

@@ -11,9 +11,10 @@ import moment from 'moment';
 // daysOfWeekNamesSpanishMondayFirst -> getAllDaysOfWeek('es', { mondayFirst: true })
 // daysOfWeekNamesSpanish -> getAllDaysOfWeek('es')
 
-// getDayOfWeek -> getDayOfWeekNum
 // getActualDayOfWeek -> getDayOfWeekNum
 // getDayOfWeek -> getDayOfWeekNum # before: [0-6] now: [1-7]
+
+// getNameOfDate -> presentDateInWords
 
 // getMonth -> getMonthNum
 // getMonthOfDB -> getMonthNum
