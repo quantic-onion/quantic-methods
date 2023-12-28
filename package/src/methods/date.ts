@@ -171,7 +171,7 @@ function formatDateLangCapitalized(date: DateParam, format: string, lang: Langua
 }
 // END GLOBAL FUNCTIONS
 
-export default {
+const qmDate = {
 	// GET LIST
 	// getAllDaysOfWeek
 	// getAllMonths
@@ -312,6 +312,10 @@ export default {
 			useRelativeTerms?: boolean,
 		},
 	) {
+		if (settings?.useRelativeTerms) {
+			const dateWithRelativeTerms = getDateWithRelativeTerms(date);
+			if (dateWithRelativeTerms) return dateWithRelativeTerms;
+		}
     const display = {
       day: true,
       dayNum: true,
@@ -332,10 +336,6 @@ export default {
 		}
     // return date name like "Jueves 24 de Mayo de 2014"
     // get object to hide parts of date. eg: { year: false,} return "Jueves 24 de Mayo"
-		if (settings?.useRelativeTerms) {
-			if (date === this.getDate()) return 'Hoy';
-			if (date === this.getDate({ days: +1 })) return 'Mañana';
-		}
     let finalDate = '';
     if (display.day) finalDate += ` ${this.getDayOfWeekName(date, 'es')}`;
     if (display.dayNum) finalDate += ` ${this.getDayOfMonth(date)}`;
@@ -344,8 +344,12 @@ export default {
     if (display.year) finalDate += ` de ${this.getYear(date)}`;
     return finalDate;
 	},
-	presentDate(date?: DateParam, format: DateFormat = 'dd/mm/yy'): presentedDate {
+	presentDate(date?: DateParam, format: DateFormat = 'dd/mm/yy', settings?: { useRelativeTerms: boolean }): presentedDate {
 		if (!date) return '';
+		if (settings?.useRelativeTerms) {
+			const dateWithRelativeTerms = getDateWithRelativeTerms(date);
+			if (dateWithRelativeTerms) return dateWithRelativeTerms;
+		}
 		let pluginFormat = 'dd/MM/yy';
 		if (format === 'dd/mm/yyyy') pluginFormat = 'dd/MM/yyyy';
 		if (format === 'dd/mm') pluginFormat = 'dd/MM';
@@ -368,3 +372,14 @@ export default {
 		return new Date(year, month, 0).getDate();
 	},
 };
+
+export default qmDate;
+
+function getDateWithRelativeTerms(date: DateParam) {
+	if (date === qmDate.getDate()) return 'Hoy';
+	// if (date == qmDate.getDate({days: +2})) return 'Pasado mañana';
+	if (date === qmDate.getDate({ days: +1 })) return 'Mañana';
+	if (date === qmDate.getDate({ days: -1 })) return 'Ayer';
+	if (date === qmDate.getDate({ days: -2 })) return 'Anteayer';
+	return '';
+}
