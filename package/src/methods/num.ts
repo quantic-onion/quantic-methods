@@ -6,7 +6,12 @@ export default {
   // setPrice (ex qo_setPrice) [ - - - VER - - - ]
   // showPrice (ex qo_showPrice) [ - - - VER - - - ]
   // simplifyNum (ex qo_simplifyNum) [ - - - VER - - - ]
-  
+  getNumberOfLenght(numberLenght: number) {
+    if (!numberLenght || numberLenght <= 0) return 0;
+    let min = Math.pow(10, numberLenght - 1);
+    let max = Math.pow(10, numberLenght) - 1;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  },
   getRandomInt(min: number, max: number) {
     min = Math.ceil(min);
     max = Math.floor(max);
