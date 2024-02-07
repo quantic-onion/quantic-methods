@@ -1403,10 +1403,10 @@ cleek@^2.5.4:
     vue3-datepicker "^0.4.0"
     vuex "^4.0.2"
 
-cleek@^2.6.82:
-  version "2.6.82"
-  resolved "https://registry.yarnpkg.com/cleek/-/cleek-2.6.82.tgz#733a8aeda3d530c5c4e36c82f06383a38ad822c0"
-  integrity sha512-8zmFHNMzQ/KlT2s91h3FsUku7UHxNXKbQIbT+G3Ae4CmxAqG5MlnT47rhUqbvWB2rqbtsrIJgBU9/QNKoBNfyQ==
+cleek@^2.6.103:
+  version "2.6.103"
+  resolved "https://registry.yarnpkg.com/cleek/-/cleek-2.6.103.tgz#d4ca0697f0acb72c4a6816eef0f5e1cd8b7b7414"
+  integrity sha512-B78CuXMaK3+BV0AnY5wkAJUn7T4QmUiiR9OSXcXMA2QrONHoQlRoxZgezs81px8IuMGKNvpH86jQgrhS7dzzEA==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-brands-svg-icons" "^6.1.1"
@@ -3254,16 +3254,6 @@ quantic-methods@^1.6.38:
   version "1.6.55"
   resolved "https://registry.yarnpkg.com/quantic-methods/-/quantic-methods-1.6.55.tgz#8298971fddb48370365ff4d215957a2db9f7b094"
   integrity sha512-CtydwU6O8DfH0nXNnCYNIghVyOlN0U7PmDlBVXA6VTkS0E0FS5StjpreASFQzAMSyUdlxMl4/49Ndw36nRSKVQ==
-  dependencies:
-    axios "^0.27.1"
-    cleek "^2.5.4"
-    date-fns "^2.28.0"
-    global "^4.4.0"
-
-quantic-methods@^1.6.58:
-  version "1.6.58"
-  resolved "https://registry.yarnpkg.com/quantic-methods/-/quantic-methods-1.6.58.tgz#278c3dd76f8a8e2fdfac522101954e19367637e0"
-  integrity sha512-7gU9/rhNXHmvZP3Am4TqJfv9EaJWUxLwrfrapMrZlvmU0izpPKMtv0XUiEE9IOX7RwdarAKWY18QtmomKQ94uw==
   dependencies:
     axios "^0.27.1"
     cleek "^2.5.4"
