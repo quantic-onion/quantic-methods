@@ -11,6 +11,13 @@ const obj = {
 	setKeyValue(obj: any, key: string, value: any) {
 		obj[key] = value;
 	},
+	entries<T extends object>(obj: T) {
+		return Object.entries(obj) as [keyof T, T[keyof T]][];
+	},
+	keys<T extends object>(obj: T) {
+		return Object.keys(obj) as (keyof T)[];
+	},
+	
 	// addEmptyOptionToList (ex global_addOptionNotSelected)
 	// getObjKey -> should be renamed to getValueByKey
 	// getValueByKey
