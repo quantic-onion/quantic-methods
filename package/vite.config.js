@@ -11,7 +11,11 @@ module.exports = defineConfig({
       // the proper extensions will be added
       fileName: "quantic-methods",
     },
-    rollupOptions: {},
+    rollupOptions: {
+      output: {
+        exports: 'named'
+      }
+    },
     plugins: [
       typescript(/*{ plugin options }*/)
     ],
