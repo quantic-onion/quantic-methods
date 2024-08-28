@@ -266,9 +266,11 @@ const qmDate = {
 		return MONTH_NAMES.es[monthNum - 1];
 	},
 	getTime(datetime?: DatetimeParam, useSeconds: boolean = false, useMiliseconds: boolean = false) {
-		if (!useSeconds) return formatDatetime(datetime, 'kk:mm');
-		if (!useMiliseconds) return formatDatetime(datetime, 'kk:mm:ss');
-		return formatDatetime(datetime, 'kk:mm:ss:SSSSSS');
+		let value = formatDatetime(datetime, 'kk:mm:ss:SSSSSS');
+		if (!useMiliseconds) value = formatDatetime(datetime, 'kk:mm:ss');
+		if (!useSeconds) value = formatDatetime(datetime, 'kk:mm');
+		if (value.startsWith('24:')) return `00${value.substring(2)}`;
+		return value;
 	},
 	getYear(date?: DateParam, format: 'yy' | 'yyyy' = 'yyyy') {
 		return +formatDateCapitalized(date, format);
