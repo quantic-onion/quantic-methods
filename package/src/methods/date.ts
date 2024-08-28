@@ -60,7 +60,7 @@ export type MonthNameSpanish =
 	| 'Diciembre';
 type DateInWordsParts = 'day' | 'dayNum' | 'month' | 'year';
 
-import { compareAsc, addSeconds, addDays, addWeeks, addMonths, addYears, intervalToDuration, format as _format } from 'date-fns';
+import { compareAsc, addSeconds, addDays, addHours, addWeeks, addMonths, addYears, intervalToDuration, format as _format, addMinutes } from 'date-fns';
 import { es as languajeEs } from 'date-fns/locale';
 
 // types
@@ -71,6 +71,8 @@ type presentedDate = string; // dd/mm/yyyy
 type DateFormat = 'dd/mm' | 'dd/mm/yy' | 'dd/mm/yyyy';
 type DateDiference = {
 	seconds?: number;
+	minutes?: number;
+	hours?: number;
 	days?: number;
 	weeks?: number;
 	months?: number;
@@ -115,6 +117,8 @@ const MONTH_NAMES = {
 function setDateDifference(date: Date, diference?: DateDiference) {
 	if (!diference) return date;
 	if (diference.seconds) addSeconds(date, diference.seconds);
+	if (diference.minutes) date = addMinutes(date, diference.minutes);
+	if (diference.hours) date = addHours(date, diference.hours);
 	if (diference.days) date = addDays(date, diference.days);
 	if (diference.weeks) date = addWeeks(date, diference.weeks);
 	if (diference.months) date = addMonths(date, diference.months);
