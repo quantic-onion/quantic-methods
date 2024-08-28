@@ -79,7 +79,7 @@ type DateDiference = {
 type TsDatetime = string;
 
 type DateParam = TsDate | DateDiference | undefined | null;
-type DatetimeParam = TsDatetime | undefined | null;
+type DatetimeParam = TsDatetime | DateDiference | undefined | null;
 // end types
 
 // constants
@@ -156,8 +156,8 @@ function getDatesInterval(date1: DateParam, date2: DateParam) {
 function formatDate(date: DateParam, format: string, diference?: DateDiference) {
 	return _format(setDate(date, diference), format);
 }
-function formatDatetime(datetime: DatetimeParam, format: string) {
-	return _format(setDatetime(datetime), format);
+function formatDatetime(datetime: DatetimeParam, format: string, diference?: DateDiference) {
+	return _format(setDatetime(datetime, diference), format);
 }
 function formatDateLang(date: DateParam, format: string, lang: Languaje) {
 	const langParam = lang === 'es' ? languajeEs : undefined;
@@ -170,6 +170,11 @@ function formatDateLangCapitalized(date: DateParam, format: string, lang: Langua
 	return qmStr.capitalize(formatDateLang(date, format, lang));
 }
 // END GLOBAL FUNCTIONS
+
+function formatTime24hs(time: string) {
+	if (time.startsWith('24:')) return `00${time.substring(2)}`;
+	return time;
+}
 
 const qmDate = {
 	// GET LIST
@@ -221,8 +226,8 @@ const qmDate = {
 	getDate(date?: DateParam, difference?: DateDiference) {
 		return formatDate(date, 'yyyy-MM-dd', difference);
 	},
-	getDatetime(datetime?: DatetimeParam) {
-		return `${this.getDate(datetime)} ${this.getTime(datetime)}`;
+	getDatetime(datetime?: DatetimeParam, diference?: DateDiference) {
+		return `${this.getDate(datetime, diference)} ${this.getTime(datetime, diference)}`;
 	},
 	getDatetimeUtc(datetime?: Date) {
 		let date = new Date();
@@ -265,12 +270,11 @@ const qmDate = {
 		if (!+monthNum || +monthNum > 12 || +monthNum < 0) return '';
 		return MONTH_NAMES.es[monthNum - 1];
 	},
-	getTime(datetime?: DatetimeParam, useSeconds: boolean = false, useMiliseconds: boolean = false) {
-		let value = formatDatetime(datetime, 'kk:mm:ss:SSSSSS');
-		if (!useMiliseconds) value = formatDatetime(datetime, 'kk:mm:ss');
-		if (!useSeconds) value = formatDatetime(datetime, 'kk:mm');
-		if (value.startsWith('24:')) return `00${value.substring(2)}`;
-		return value;
+	getTime(datetime?: DatetimeParam, diference?: DateDiference) {
+		// let value = formatDatetime(datetime, 'kk:mm:ss:SSSSSS');
+		// if (!useSeconds) value = formatDatetime(datetime, 'kk:mm');
+		let time = formatDatetime(datetime, 'kk:mm:ss', diference);
+		return formatTime24hs(time);
 	},
 	getYear(date?: DateParam, format: 'yy' | 'yyyy' = 'yyyy') {
 		return +formatDateCapitalized(date, format);
@@ -360,8 +364,7 @@ const qmDate = {
 	presentTime(datetime?: DatetimeParam): presentedDate {
 		if (!datetime) return '';
 		const formatedTime = formatDatetime(datetime, 'kk:mm');
-		if (formatedTime.startsWith('24:')) return `00${formatedTime.substring(2)}`;
-		return formatedTime;
+		return formatTime24hs(formatedTime);
 	},
 	dateToDb(date: presentedDate) {
 		const day = date.substring(0, 2);
