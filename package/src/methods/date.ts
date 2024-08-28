@@ -357,7 +357,9 @@ const qmDate = {
 	},
 	presentTime(datetime?: DatetimeParam): presentedDate {
 		if (!datetime) return '';
-		return formatDatetime(datetime, 'kk:mm');
+		const formatedTime = formatDatetime(datetime, 'kk:mm');
+		if (formatedTime.startsWith('24:')) return `00${datetime.substring(2)}`;
+		return formatedTime;
 	},
 	dateToDb(date: presentedDate) {
 		const day = date.substring(0, 2);
