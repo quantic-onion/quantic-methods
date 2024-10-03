@@ -60,13 +60,13 @@ export type MonthNameSpanish =
 	| 'Diciembre';
 type DateInWordsParts = 'day' | 'dayNum' | 'month' | 'year';
 
-import { compareAsc, addSeconds, addDays, addHours, addWeeks, addMonths, addYears, intervalToDuration, format as _format, addMinutes } from 'date-fns';
+import { compareAsc, addSeconds, addDays, addHours, addWeeks, addMonths, addYears, intervalToDuration, format as _format, addMinutes, startOfYear, differenceInDays } from 'date-fns';
 import { es as languajeEs } from 'date-fns/locale';
 
 // types
 type Languaje = 'es' | 'en';
 type Time = string | undefined; // hh:mm
-type TsDate = string; // yyyy-mm-dd
+type TsDate = string | null; // yyyy-mm-dd
 type presentedDate = string; // dd/mm/yyyy
 type DateFormat = 'dd/mm' | 'dd/mm/yy' | 'dd/mm/yyyy';
 type DateDiference = {
@@ -233,15 +233,23 @@ const qmDate = {
 	getDatetime(datetime?: DatetimeParam, diference?: DateDiference) {
 		return `${this.getDate(datetime, diference)} ${this.getTime(datetime, diference)}`;
 	},
-	getDatetimeUtc(datetime?: Date) {
+	getDatetimeUtc(datetime?: DatetimeParam) {
 		let date = new Date();
-		if (datetime) date = new Date(datetime);
+		if (datetime) date = new Date(this.getDatetime(datetime));
 		const year = date.getUTCFullYear();
 		const month = String(date.getUTCMonth() + 1).padStart(2, '0');
 		const day = String(date.getUTCDate()).padStart(2, '0');
 		const hours = String(date.getUTCHours()).padStart(2, '0');
 		const minutes = String(date.getUTCMinutes()).padStart(2, '0');
 		return `${year}-${month}-${day}T${hours}:${minutes}`;
+	},
+	getDatetimeFromDateAndTime(date?: TsDate, time?: string) {
+		if (!date) return null;
+		return `${date} ${time || '00:00:00'}`;
+	},
+	getDatetimeUtcFromDateAndTime(date?: TsDate, time?: string) {
+		const datetime = this.getDatetimeFromDateAndTime(date, time);
+		return qmDate.getDatetimeUtc(datetime);
 	},
 	getDayOfMonth(date?: DateParam) {
 		return formatDate(date, 'd');
@@ -256,7 +264,9 @@ const qmDate = {
 	},
 	getDayOfYear(date?: DateParam) {
 		// return number of day. Between 1 and 366
-		return formatDate(date, 'D');
+		const dateToEvaluate = this.getDate(date);
+		const startOfYearDate = startOfYear(new Date(dateToEvaluate));
+		return differenceInDays(new Date(dateToEvaluate), startOfYearDate);
 	},
 	getMinutesOfDay(datetime?: DatetimeParam) {
 		const h = formatDatetime(datetime, 'kk');
@@ -311,6 +321,16 @@ const qmDate = {
 		// (allways positive)
 		if (!date1 || !date2) return 0;
 		return getDatesInterval(date1, date2).years || 0;
+	},
+	isDatetime(datetimeString: string) {
+		// Expresión regular para validar un datetime en formato "YYYY-MM-DDTHH:mm:ss"
+		const datetimeRegex1 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
+		const datetimeRegex2 = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+		const datetimeRegex3 = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+		if (datetimeRegex1.test(datetimeString)) return true;
+		if (datetimeRegex2.test(datetimeString)) return true;
+		if (datetimeRegex3.test(datetimeString)) return true;
+		return false;
 	},
 
 	// PRESENTATION
