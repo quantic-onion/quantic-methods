@@ -47,10 +47,12 @@ const qmStr = {
 		return `rgb(${r}, ${g}, ${b})`;
 	},
 	padZeros(num: number, size: number = 2) {
-		// 16 -> 016 | 9 -> 009 | 177 -> 177
+		// 6 -> 06 | 14 -> 14 | 177 -> 177 | 2.345 -> 02.345
 		const isNegative = num < 0;
-		const absValue = `000000000${Math.abs(num)}`.substr(-size);
-		return isNegative ? `-${absValue}` : absValue;
+    const [integerPart, decimalPart] = Math.abs(num).toString().split('.');
+    const paddedInteger = integerPart.padStart(size, '0');
+    const result = decimalPart ? `${paddedInteger}.${decimalPart}` : paddedInteger;
+    return isNegative ? `-${result}` : result;
 	},
 	pascalToCamelCase(str: string) {
 		if (str === 'ID') return 'id';
