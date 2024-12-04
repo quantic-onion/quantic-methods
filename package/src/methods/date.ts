@@ -332,6 +332,46 @@ const qmDate = {
 		if (datetimeRegex3.test(datetimeString)) return true;
 		return false;
 	},
+  isSameDate(date1?: Date | string, date2?: Date | string) {
+    if (!date1 || !date2) return false;
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
+  },
+  isTimeFormat(time: string) {
+		const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
+		return timeRegex.test(time)
+	},
+	timeIsNewer(time1: string, time2: string) {
+    // compare two times hh:mm:ss and return true if time1 is newer than time2
+    if (!this.isTimeFormat(time1) || !this.isTimeFormat(time2)) return false;
+    const [hours1, minutes1, seconds1] = time1.split(':').map(Number);
+    const [hours2, minutes2, seconds2] = time2.split(':').map(Number);
+    console.log('hours1', hours1)
+    console.log('hours2', hours2)
+    if (hours1 > hours2) return true;
+    if (hours1 < hours2) return false;
+    if (minutes1 > minutes2) return true;
+    if (minutes1 < minutes2) return false;
+    return seconds1 > seconds2;
+	},
+	datetimeIsNewer(datetime1: DatetimeParam, datetime2?: DatetimeParam) {
+		// compare two datetimes and return true if datetime1 is newer than datetime2
+			if (!datetime1 || !datetime2) return false;
+			const date1 = this.getDate(datetime1)
+      console.log('date1', date1)
+			const time1 = this.getTime(datetime1)
+			const date2 = this.getDate(datetime2)
+			const time2 = this.getTime(datetime2)
+			if (this.dateIsNewer(date1, date2)) return true;
+      if (this.isSameDate(date1, date2) && this.timeIsNewer(time1, time2)) return true;
+      return false;
+	},
+
 
 	// PRESENTATION
 	presentDateInWords(
