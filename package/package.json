@@ -1,6 +1,6 @@
 {
   "name": "quantic-methods",
-  "version": "1.6.81",
+  "version": "1.6.82",
   "description": "Quantic Onion's general methods compilation",
   "files": [
     "dist"
