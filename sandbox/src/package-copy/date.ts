@@ -289,8 +289,6 @@ export default {
     if (!this.isTimeFormat(time1) || !this.isTimeFormat(time2)) return false;
     const [hours1, minutes1, seconds1] = time1.split(':').map(Number);
     const [hours2, minutes2, seconds2] = time2.split(':').map(Number);
-    console.log('hours1', hours1)
-    console.log('hours2', hours2)
     if (hours1 > hours2) return true;
     if (hours1 < hours2) return false;
     if (minutes1 > minutes2) return true;
@@ -301,7 +299,6 @@ export default {
 		// compare two datetimes and return true if datetime1 is newer than datetime2
 			if (!datetime1 || !datetime2) return false;
 			const date1 = this.getDate(datetime1)
-      console.log('date1', date1)
 			const time1 = this.getTime(datetime1)
 			const date2 = this.getDate(datetime2)
 			const time2 = this.getTime(datetime2)
